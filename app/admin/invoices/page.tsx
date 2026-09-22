@@ -17,12 +17,14 @@ export default async function InvoicesPage({ searchParams }: Props) {
     await supabase.auth.signOut();
     redirect('/login?error=Your%20account%20is%20inactive');
   }
-  if (profile.role !== 'admin') redirect('/dashboard');
+  if (!['admin','reseller'].includes(profile.role)) redirect('/login');
 
   const admin = createAdminClient();
   const [{ data: products }, { data: invoices }] = await Promise.all([
     admin.from('products').select('id,name,packages(id,name,active,prices(price,customer_type,active))').eq('active',true).order('sort_order'),
-    admin.from('invoices').select('id,invoice_number,customer_name,price,payment_status,created_at,invoice_items(product_name,package_name,price,sort_order)').order('created_at',{ascending:false}).limit(50),
+    profile.role === 'admin'
+      ? admin.from('invoices').select('id,invoice_number,customer_name,price,payment_status,created_at,invoice_items(product_name,package_name,price,sort_order)').order('created_at',{ascending:false}).limit(50)
+      : admin.from('invoices').select('id,invoice_number,customer_name,price,payment_status,created_at,invoice_items(product_name,package_name,price,sort_order)').eq('created_by',userId).order('created_at',{ascending:false}).limit(50),
   ]);
 
   const productData = (products ?? []).map((p:any)=>({
@@ -42,12 +44,12 @@ export default async function InvoicesPage({ searchParams }: Props) {
     <div className="adminWrap">
       <header className="dashboardTopbar">
         <a href="/" className="brand"><span className="brandMark"><b>J</b><strong>BE</strong><i /></span><span><b>JBE</b><small>Digital + Gaming</small></span></a>
-        <div className="dashboardTopActions"><a href="/admin" className="adminBtn">Admin Home</a><form action={logout}><button className="logoutBtn" type="submit">Sign out</button></form></div>
+        <div className="dashboardTopActions"><a href={profile.role === 'admin' ? '/admin' : '/dashboard'} className="adminBtn">{profile.role === 'admin' ? 'Admin Home' : 'Dashboard'}</a><form action={logout}><button className="logoutBtn" type="submit">Sign out</button></form></div>
       </header>
-      <section className="adminHero"><div><span className="miniLabel">INVOICE MANAGEMENT</span><h1>Create & manage invoices.</h1><p>Build multi-item invoices with JBE pricing, customer details and payment status.</p></div><a href="/admin" className="backBtn">← Admin home</a></section>
-      <InvoiceForm products={productData} />
+      <section className="adminHero"><div><span className="miniLabel">INVOICE MANAGEMENT</span><h1>Create & manage invoices.</h1><p>Create invoices with JBE pricing, customer details and payment status.</p></div><a href={profile.role === 'admin' ? '/admin' : '/dashboard'} className="backBtn">← {profile.role === 'admin' ? 'Admin home' : 'Dashboard'}</a></section>
+      <InvoiceForm products={productData} role={profile.role} />
       <section className="adminListSection">
-        <div className="dashboardSectionHead"><div><span className="miniLabel">RECENT INVOICES</span><h2>Invoice history</h2></div><span className="publicBadge">{invoices?.length ?? 0} invoices</span></div>
+        <div className="dashboardSectionHead"><div><span className="miniLabel">{profile.role === 'admin' ? 'RECENT INVOICES' : 'MY INVOICES'}</span><h2>Invoice history</h2></div><span className="publicBadge">{invoices?.length ?? 0} invoices</span></div>
         <div className="invoiceHistory">
           {(invoices ?? []).map((invoice:any)=><details className="adminEditCard" key={invoice.id}>
             <summary><span><b>{invoice.invoice_number}</b><small>{invoice.customer_name} • {(Number(invoice.price)||0).toLocaleString('en-US')} Ks</small></span><em>{String(invoice.payment_status).toUpperCase()}</em></summary>
