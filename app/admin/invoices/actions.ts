@@ -64,18 +64,23 @@ export async function createInvoice(formData: FormData) {
 
   if (isReseller) {
     const packageIds = cleanItems.map(item => item.package_id);
-    const [{ data: packages }, { data: prices }] = await Promise.all([
-      admin.from('packages').select('id,name,product_id,products(name)').in('id', packageIds).eq('active', true),
-      admin.from('prices').select('package_id,price').in('package_id', packageIds).eq('customer_type', 'reseller').eq('active', true),
-    ]);
+    const { data: packages } = await admin
+      .from('packages')
+      .select('id,name,product_id,products(name)')
+      .in('id', packageIds)
+      .eq('active', true);
+
     const packageMap = new Map((packages ?? []).map((pkg:any) => [String(pkg.id), pkg]));
-    const priceMap = new Map((prices ?? []).map((price:any) => [String(price.package_id), Number(price.price)]));
     const invalid = cleanItems.some(item => {
       const pkg:any = packageMap.get(item.package_id);
-      const expected = priceMap.get(item.package_id);
-      return !pkg || String(pkg.product_id) !== item.product_id || String(pkg.name).trim() !== item.package_name || String(pkg.products?.name || '').trim() !== item.product_name || expected === undefined || expected <= 0 || item.price <= 0;
+      return !pkg ||
+        String(pkg.product_id) !== item.product_id ||
+        String(pkg.name).trim() !== item.package_name ||
+        String(pkg.products?.name || '').trim() !== item.product_name ||
+        item.price <= 0;
     });
-    if (invalid) redirect(errorPath + '?error=One%20or%20more%20items%20do%20not%20match%20the%20current%20reseller%20price');
+
+    if (invalid) redirect(errorPath + '?error=One%20or%20more%20items%20are%20invalid');
   }
   const { data: number, error: numberError } = await admin.rpc('generate_invoice_number');
   if (numberError || !number) redirect(errorPath + '?error=Could%20not%20generate%20invoice%20number');
