@@ -1,0 +1,1 @@
+export default function Login(){return <main className="loginPage"><div className="loginCard"><div className="brandMark large"><b>J</b><strong>BE</strong><i/></div><span className="miniLabel">RESELLER ACCESS</span><h1>Sign in</h1><p>Phase 1 prepares the login route. Authentication will be connected in Phase 2.</p><a href="/" className="backBtn">← Back to catalog</a></div></main>}
