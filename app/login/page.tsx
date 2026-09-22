@@ -1,15 +1,26 @@
 'use client';
 
 import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { login } from './actions';
-
-type LoginPageProps = { searchParams?: Promise<{ error?: string }> };
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
+  const searchParams = useSearchParams();
+  const error = searchParams.get('error');
 
   return (
     <main className="loginPage">
+      {error && (
+        <div className="loginAlert loginAlertError" role="alert">
+          <span>!</span>
+          <div>
+            <strong>Sign in failed</strong>
+            <p>{error}</p>
+          </div>
+        </div>
+      )}
+
       <section className="loginShell">
         <div className="loginVisual">
           <div className="loginVisualGlow" />
