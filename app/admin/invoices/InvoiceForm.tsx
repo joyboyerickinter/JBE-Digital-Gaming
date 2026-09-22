@@ -72,7 +72,7 @@ export default function InvoiceForm({ products, role }: { products: Product[]; r
           return <div className="invoiceItemRow" key={index}>
             <div><span>Product</span><select value={item.productId} onChange={e=>updateItem(index,'productId',e.target.value)}>{products.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select></div>
             <div><span>Package</span><select value={item.packageId} onChange={e=>updateItem(index,'packageId',e.target.value)}>{(product?.packages ?? []).map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select></div>
-            <div><span>Price (Ks)</span><input type="number" min="0" step="1" value={item.price} readOnly={role === 'reseller'} onChange={e=>updateItem(index,'price',e.target.value)} /></div>
+            <div><span>Price (Ks)</span><input type="number" min="0" step="1" value={item.price} onChange={e=>updateItem(index,'price',e.target.value)} /></div>
             <button type="button" className="invoiceRemoveBtn" onClick={()=>setItems(current=>current.filter((_,i)=>i!==index))}>Remove</button>
           </div>
         })}
