@@ -78,7 +78,7 @@ export default async function AdminPage() {
             <span className="miniLabel">ACCOUNTS</span>
             <h2>Reseller accounts</h2>
             <p>Create, activate or deactivate reseller access.</p>
-            <button className="adminDisabledBtn" disabled>Coming next</button>
+            <a className="adminPrimaryBtn" href="/admin/accounts">Manage accounts →</a>
           </div>
 
           <div className="adminToolCard">
