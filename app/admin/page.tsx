@@ -70,7 +70,7 @@ export default async function AdminPage() {
             <span className="miniLabel">PRICING</span>
             <h2>B2C & reseller prices</h2>
             <p>Maintain customer and reseller pricing in one place.</p>
-            <button className="adminDisabledBtn" disabled>Coming next</button>
+            <a className="adminPrimaryBtn" href="/admin/pricing">Manage pricing →</a>
           </div>
 
           <div className="adminToolCard">
