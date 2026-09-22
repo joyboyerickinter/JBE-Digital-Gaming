@@ -62,7 +62,7 @@ export default async function AdminPage() {
             <span className="miniLabel">CATALOG</span>
             <h2>Products & packages</h2>
             <p>Add, edit or deactivate products and packages.</p>
-            <button className="adminDisabledBtn" disabled>Coming next</button>
+            <a className="adminPrimaryBtn" href="/admin/catalog">Manage catalog →</a>
           </div>
 
           <div className="adminToolCard">
