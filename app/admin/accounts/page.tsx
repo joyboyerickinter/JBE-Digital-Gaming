@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { logout } from '@/app/login/actions';
 import { createReseller, updateReseller } from './actions';
+import CreateResellerForm from './CreateResellerForm';
 
 type Props = { searchParams: Promise<{ success?: string; error?: string }> };
 type Profile = { id: string; full_name: string | null; role: 'admin' | 'reseller'; active: boolean; created_at: string };
@@ -67,12 +68,7 @@ export default async function AccountsAdmin({ searchParams }: Props) {
             <span className="miniLabel">NEW RESELLER</span>
             <h2>Create an account</h2>
             <p>Credentials are created server-side and the account is confirmed immediately.</p>
-            <form action={createReseller} className="adminForm">
-              <label>Full name<input name="full_name" placeholder="e.g. John Doe" /></label>
-              <label>Email<input name="email" type="email" placeholder="reseller@example.com" required /></label>
-              <label>Password<input name="password" type="password" placeholder="At least 8 characters" minLength={8} required /></label>
-              <button className="adminPrimaryBtn" type="submit" disabled={!canCreate}>{canCreate ? 'Create reseller' : 'Account limit reached'}</button>
-            </form>
+            <CreateResellerForm action={createReseller} canCreate={canCreate} />
           </article>
 
           <article className="adminToolCard">
