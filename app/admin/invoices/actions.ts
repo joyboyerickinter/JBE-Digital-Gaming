@@ -114,5 +114,5 @@ export async function createInvoice(formData: FormData) {
   revalidatePath('/admin/invoices');
   revalidatePath('/dashboard/invoices');
   revalidatePath('/admin');
-  redirect(errorPath + '?success=' + encodeURIComponent(String(number)));
+  redirect((isReseller ? '/dashboard/invoices/' : '/admin/invoices/') + invoice.id);
 }
