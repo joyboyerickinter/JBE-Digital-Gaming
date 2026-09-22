@@ -36,7 +36,7 @@ export async function createInvoice(formData: FormData) {
   const errorPath = isReseller ? '/dashboard/invoices' : '/admin/invoices';
   if (!customerName) redirect(errorPath + '?error=Customer%20name%20is%20required');
 
-  let items: Array<{product_name:string;package_name:string;price:number;currency?:string;sort_order:number}>;
+  let items: Array<{product_id?:string;package_id?:string;product_name:string;package_name:string;price:number;currency?:string;sort_order:number}>;
   try {
     items = JSON.parse(itemsRaw);
   } catch {
@@ -47,6 +47,8 @@ export async function createInvoice(formData: FormData) {
   if (!['paid','unpaid'].includes(paymentStatus)) redirect(errorPath + '?error=Invalid%20payment%20status');
 
   const cleanItems = items.map((item, index) => ({
+    product_id: String(item.product_id || ''),
+    package_id: String(item.package_id || ''),
     product_name: String(item.product_name || '').trim(),
     package_name: String(item.package_name || '').trim(),
     price: Number(item.price) || 0,
@@ -96,7 +98,7 @@ export async function createInvoice(formData: FormData) {
   if (error || !invoice) redirect(errorPath + '?error=Could%20not%20create%20invoice');
 
   const { error: itemError } = await admin.from('invoice_items').insert(
-    cleanItems.map(item => ({ ...item, invoice_id: invoice.id }))
+    cleanItems.map(item => ({ invoice_id: invoice.id, product_name: item.product_name, package_name: item.package_name, price: item.price, currency: 'MMK', sort_order: item.sort_order }))
   );
 
   if (itemError) {
