@@ -73,7 +73,7 @@ export async function createInvoice(formData: FormData) {
     const invalid = cleanItems.some(item => {
       const pkg:any = packageMap.get(item.package_id);
       const expected = priceMap.get(item.package_id);
-      return !pkg || String(pkg.product_id) !== item.product_id || String(pkg.name).trim() !== item.package_name || String(pkg.products?.name || '').trim() !== item.product_name || expected === undefined || expected <= 0 || item.price !== expected;
+      return !pkg || String(pkg.product_id) !== item.product_id || String(pkg.name).trim() !== item.package_name || String(pkg.products?.name || '').trim() !== item.product_name || expected === undefined || expected <= 0 || item.price <= 0;
     });
     if (invalid) redirect(errorPath + '?error=One%20or%20more%20items%20do%20not%20match%20the%20current%20reseller%20price');
   }
