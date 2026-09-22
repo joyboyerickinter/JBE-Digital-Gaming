@@ -38,7 +38,7 @@ export default function InvoiceForm({ products, role }: { products: Product[]; r
       }
       if (field === 'packageId') {
         const pkg = products.flatMap(p => p.packages).find(p => p.id === value);
-        return pkg ? {...item, packageId:pkg.id, package_name:pkg.name, price:pkg.reseller || pkg.b2c} : item;
+        return pkg ? {...item, packageId:pkg.id, package_name:pkg.name, price:role === 'reseller' ? pkg.reseller : (pkg.reseller || pkg.b2c)} : item;
       }
       if (field === 'price') return {...item, price:Number(value) || 0};
       return item;
@@ -78,7 +78,7 @@ export default function InvoiceForm({ products, role }: { products: Product[]; r
         })}
       </div>
 
-      <input type="hidden" name="items" value={JSON.stringify(items.map((item,index)=>({product_name:item.product_name,package_name:item.package_name,price:Number(item.price)||0,sort_order:index})))} />
+      <input type="hidden" name="items" value={JSON.stringify(items.map((item,index)=>({product_id:item.productId,package_id:item.packageId,product_name:item.product_name,package_name:item.package_name,price:Number(item.price)||0,sort_order:index})))} />
 
       <div className="invoiceTotal"><span>Total</span><strong>{total.toLocaleString('en-US')} Ks</strong></div>
       <SubmitButton />
