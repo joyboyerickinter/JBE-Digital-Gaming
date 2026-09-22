@@ -16,7 +16,7 @@ function SubmitButton() {
   );
 }
 
-export default function InvoiceForm({ products }: { products: Product[] }) {
+export default function InvoiceForm({ products, role }: { products: Product[]; role: string }) {
   const [customer, setCustomer] = useState('');
   const [payment, setPayment] = useState('unpaid');
   const [items, setItems] = useState<Array<{productId:string;packageId:string;product_name:string;package_name:string;price:number}>>([]);
@@ -25,7 +25,7 @@ export default function InvoiceForm({ products }: { products: Product[] }) {
     const product = products[0];
     const pkg = product?.packages[0];
     if (!product || !pkg) return;
-    setItems(current => [...current, { productId:product.id, packageId:pkg.id, product_name:product.name, package_name:pkg.name, price:pkg.reseller || pkg.b2c }]);
+    setItems(current => [...current, { productId:product.id, packageId:pkg.id, product_name:product.name, package_name:pkg.name, price:role === 'reseller' ? pkg.reseller : (pkg.reseller || pkg.b2c) }]);
   };
 
   const updateItem = (index:number, field:string, value:string) => {
@@ -34,7 +34,7 @@ export default function InvoiceForm({ products }: { products: Product[] }) {
       if (field === 'productId') {
         const product = products.find(p => p.id === value);
         const pkg = product?.packages[0];
-        return product && pkg ? {...item, productId:product.id, packageId:pkg.id, product_name:product.name, package_name:pkg.name, price:pkg.reseller || pkg.b2c} : item;
+        return product && pkg ? {...item, productId:product.id, packageId:pkg.id, product_name:product.name, package_name:pkg.name, price:role === 'reseller' ? pkg.reseller : (pkg.reseller || pkg.b2c)} : item;
       }
       if (field === 'packageId') {
         const pkg = products.flatMap(p => p.packages).find(p => p.id === value);
@@ -72,7 +72,7 @@ export default function InvoiceForm({ products }: { products: Product[] }) {
           return <div className="invoiceItemRow" key={index}>
             <div><span>Product</span><select value={item.productId} onChange={e=>updateItem(index,'productId',e.target.value)}>{products.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select></div>
             <div><span>Package</span><select value={item.packageId} onChange={e=>updateItem(index,'packageId',e.target.value)}>{(product?.packages ?? []).map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select></div>
-            <div><span>Price (Ks)</span><input type="number" min="0" step="1" value={item.price} onChange={e=>updateItem(index,'price',e.target.value)} /></div>
+            <div><span>Price (Ks)</span><input type="number" min="0" step="1" value={item.price} readOnly={role === 'reseller'} onChange={e=>updateItem(index,'price',e.target.value)} /></div>
             <button type="button" className="invoiceRemoveBtn" onClick={()=>setItems(current=>current.filter((_,i)=>i!==index))}>Remove</button>
           </div>
         })}
