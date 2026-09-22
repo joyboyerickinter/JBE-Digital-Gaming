@@ -8,11 +8,14 @@ export async function login(formData: FormData) {
   const supabase = await createClient();
   const email = String(formData.get('email') || '').trim();
   const password = String(formData.get('password') || '');
+
   if (!email || !password) redirect('/login?error=Please%20enter%20email%20and%20password');
+
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) redirect('/login?error=Invalid%20email%20or%20password');
+
   revalidatePath('/', 'layout');
-  redirect('/dashboard');
+  redirect('/dashboard?success=Signed%20in%20successfully');
 }
 
 export async function logout() {
