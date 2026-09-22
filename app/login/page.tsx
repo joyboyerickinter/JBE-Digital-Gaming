@@ -1,9 +1,12 @@
+'use client';
+
+import { useState } from 'react';
 import { login } from './actions';
 
-type LoginPageProps = { searchParams: Promise<{ error?: string }> };
+type LoginPageProps = { searchParams?: Promise<{ error?: string }> };
 
-export default async function Login({ searchParams }: LoginPageProps) {
-  const params = await searchParams;
+export default function Login() {
+  const [loading, setLoading] = useState(false);
 
   return (
     <main className="loginPage">
@@ -17,23 +20,17 @@ export default async function Login({ searchParams }: LoginPageProps) {
             </div>
             <span className="loginLive"><i /> SECURE ACCESS</span>
           </div>
-
           <div className="loginVisualContent">
             <span className="miniLabel">JBE RESELLER PORTAL</span>
             <h1>Run your<br /><em>digital business.</em></h1>
             <p>Access reseller pricing, invoices and your JBE business tools from one place.</p>
-
             <div className="loginFeatureGrid">
               <div><b>B2B</b><span>Reseller pricing</span></div>
               <div><b>PDF</b><span>Invoice tools</span></div>
               <div><b>24/7</b><span>Catalog access</span></div>
             </div>
           </div>
-
-          <div className="loginVisualFooter">
-            <span>JBE Digital + Gaming</span>
-            <span>Private reseller area</span>
-          </div>
+          <div className="loginVisualFooter"><span>JBE Digital + Gaming</span><span>Private reseller area</span></div>
         </div>
 
         <div className="loginPanel">
@@ -44,18 +41,18 @@ export default async function Login({ searchParams }: LoginPageProps) {
             <p>Sign in to continue to your JBE reseller account.</p>
           </div>
 
-          {params.error && <div className="loginError">{params.error}</div>}
-
-          <form action={login} className="loginForm">
+          <form action={login} className="loginForm" onSubmit={() => setLoading(true)}>
             <label>
               <span>Email address</span>
-              <div className="inputWrap"><span>✉</span><input name="email" type="email" placeholder="you@example.com" autoComplete="email" required /></div>
+              <div className="inputWrap"><span>✉</span><input name="email" type="email" placeholder="you@example.com" autoComplete="email" required disabled={loading} /></div>
             </label>
             <label>
               <span>Password</span>
-              <div className="inputWrap"><span>••</span><input name="password" type="password" placeholder="Enter your password" autoComplete="current-password" required /></div>
+              <div className="inputWrap"><span>••</span><input name="password" type="password" placeholder="Enter your password" autoComplete="current-password" required disabled={loading} /></div>
             </label>
-            <button type="submit" className="loginSubmit">Sign in to JBE <span>→</span></button>
+            <button type="submit" className="loginSubmit" disabled={loading}>
+              {loading ? <><i className="loginSpinner" /> Signing in...</> : <>Sign in to JBE <span>→</span></>}
+            </button>
           </form>
 
           <div className="loginHint"><span>●</span><p>Your reseller account is managed by JBE Digital + Gaming.</p></div>
