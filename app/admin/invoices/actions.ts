@@ -43,6 +43,7 @@ export async function createInvoice(formData: FormData) {
     redirect(errorPath + '?error=Invalid%20invoice%20items');
   }
 
+  if (!Array.isArray(items)) redirect(errorPath + '?error=Invalid%20invoice%20items');
   if (!items.length) redirect(errorPath + '?error=Add%20at%20least%20one%20item');
   if (!['paid','unpaid'].includes(paymentStatus)) redirect(errorPath + '?error=Invalid%20payment%20status');
 
