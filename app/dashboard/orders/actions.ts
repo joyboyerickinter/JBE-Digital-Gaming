@@ -98,6 +98,17 @@ export async function createOrder(formData: FormData) {
     redirect(errorPath + '?error=Could%20not%20save%20payment%20screenshot');
   }
 
+  const { error: screenshotPathError } = await admin
+    .from('orders')
+    .update({ screenshot_path: screenshotPath, updated_at: new Date().toISOString() })
+    .eq('id', order.id);
+
+  if (screenshotPathError) {
+    await admin.storage.from('order-screenshots').remove([screenshotPath]);
+    await admin.from('orders').delete().eq('id', order.id);
+    redirect(errorPath + '?error=Could%20not%20link%20payment%20screenshot');
+  }
+
   const { error: itemError } = await admin.from('order_items').insert(cleanItems.map(item => ({
     order_id: order.id,
     product_id: item.product_id,
