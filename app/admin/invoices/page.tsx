@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
@@ -44,10 +45,10 @@ export default async function InvoicesPage({ searchParams }: Props) {
     {params.error && <div className="loginAlert loginAlertError" role="alert"><span>!</span><div><strong>Invoice failed</strong><p>{params.error}</p></div></div>}
     <div className="adminWrap">
       <header className="dashboardTopbar">
-        <a href="/" className="brand"><span className="brandMark"><b>J</b><strong>BE</strong><i /></span><span><b>JBE</b><small>Digital + Gaming</small></span></a>
-        <div className="dashboardTopActions"><a href={profile.role === 'admin' ? '/admin' : '/dashboard'} className="adminBtn">{profile.role === 'admin' ? 'Admin Home' : 'Dashboard'}</a><form action={logout}><button className="logoutBtn" type="submit">Sign out</button></form></div>
+        <Link href="/" className="brand"><span className="brandMark"><b>J</b><strong>BE</strong><i /></span><span><b>JBE</b><small>Digital + Gaming</small></span></Link>
+        <div className="dashboardTopActions"><Link href={profile.role === 'admin' ? '/admin' : '/dashboard'} className="adminBtn">{profile.role === 'admin' ? 'Admin Home' : 'Dashboard'}</Link><form action={logout}><button className="logoutBtn" type="submit">Sign out</button></form></div>
       </header>
-      <section className="adminHero"><div><span className="miniLabel">{profile.role === 'admin' ? 'INVOICE MANAGEMENT' : 'RESELLER INVOICES'}</span><h1>{profile.role === 'admin' ? 'Create & manage invoices.' : 'Create and track your invoices.'}</h1><p>{profile.role === 'admin' ? 'Create invoices with JBE pricing, customer details and payment status.' : 'Create invoices with reseller pricing, adjust your selling price, and keep your invoice history in one place.'}</p></div><a href={profile.role === 'admin' ? '/admin' : '/dashboard'} className="backBtn">← {profile.role === 'admin' ? 'Admin home' : 'Dashboard'}</a></section>
+      <section className="adminHero"><div><span className="miniLabel">{profile.role === 'admin' ? 'INVOICE MANAGEMENT' : 'RESELLER INVOICES'}</span><h1>{profile.role === 'admin' ? 'Create & manage invoices.' : 'Create and track your invoices.'}</h1><p>{profile.role === 'admin' ? 'Create invoices with JBE pricing, customer details and payment status.' : 'Create invoices with reseller pricing, adjust your selling price, and keep your invoice history in one place.'}</p></div><Link href={profile.role === 'admin' ? '/admin' : '/dashboard'} className="backBtn">← {profile.role === 'admin' ? 'Admin home' : 'Dashboard'}</Link></section>
       <InvoiceForm products={productData} role={profile.role} />
       <section className="adminListSection">
         <div className="dashboardSectionHead"><div><span className="miniLabel">{profile.role === 'admin' ? 'RECENT INVOICES' : 'MY INVOICES'}</span><h2>Invoice history</h2></div><span className="publicBadge">{invoices?.length ?? 0} invoices</span></div>
@@ -58,7 +59,7 @@ export default async function InvoicesPage({ searchParams }: Props) {
             <summary><span><b>{invoice.invoice_number}</b><small>{invoice.customer_name} • {(Number(invoice.price)||0).toLocaleString('en-US')} Ks</small></span><em>{String(invoice.payment_status).toUpperCase()}</em></summary>
             <div className="invoiceHistoryBody">
               {(invoice.invoice_items ?? []).sort((a:any,b:any)=>a.sort_order-b.sort_order).map((item:any)=><div className="invoiceHistoryItem" key={item.product_name+item.package_name}><span>{item.product_name} — {item.package_name}</span><b>{(Number(item.price)||0).toLocaleString('en-US')} Ks</b></div>)}
-              <small>{new Date(invoice.created_at).toLocaleString('en-GB')}</small><a href={`${profile.role === 'admin' ? '/admin/invoices/' : '/dashboard/invoices/'}${invoice.id}`} className="invoiceViewLink">View invoice →</a>
+              <small>{new Date(invoice.created_at).toLocaleString('en-GB')}</small><Link href={`${profile.role === 'admin' ? '/admin/invoices/' : '/dashboard/invoices/'}${invoice.id}`} className="invoiceViewLink">View invoice →</Link>
             </div>
           </details>)}
         </div>
