@@ -48,3 +48,5 @@
   .invoicePreviewPage{padding:0!important;background:#fff!important}
   .jbeInvoice{width:210mm;min-height:297mm;margin:0;border:0;box-shadow:none;padding:18mm 17mm}
 }
+
+.resellerQuickActions{display:flex;gap:10px;margin:0 0 28px}.resellerSecondaryBtn{height:38px;display:inline-flex;align-items:center;justify-content:center;border:1px solid #d0d5dd;border-radius:10px;background:#fff;color:#344054;padding:0 13px;font-size:10px;font-weight:900}.resellerSecondaryBtn:hover{background:#f8fafc;border-color:#98a2b3}.invoiceViewLink{display:inline-flex;margin-top:12px;color:#344054;font-size:9px;font-weight:900}.invoiceViewLink:hover{color:#111827}@media(max-width:430px){.resellerQuickActions{flex-direction:column}.resellerQuickActions .adminPrimaryBtn,.resellerSecondaryBtn{width:100%}}
