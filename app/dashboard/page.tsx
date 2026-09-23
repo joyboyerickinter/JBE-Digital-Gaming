@@ -52,7 +52,7 @@ export default async function Dashboard({ searchParams }: DashboardProps) {
       <div className="dashboardWrap">
         <header className="dashboardTopbar">
           <a href="/" className="brand"><span className="brandMark"><b>J</b><strong>BE</strong><i /></span><span><b>JBE</b><small>Digital + Gaming</small></span></a>
-          <div className="dashboardTopActions">\n            <a href="/dashboard/invoices" className="adminBtn">Invoices</a>
+          <div className="dashboardTopActions">            <a href="/dashboard/invoices" className="adminBtn">Invoices</a>
             {profile.role === 'admin' && <a href="/admin" className="adminBtn">Admin Portal</a>}
             <span className="roleBadge">{profile.role === 'admin' ? 'ADMIN' : 'RESELLER'}</span>
             <form action={logout}><button className="logoutBtn" type="submit">Sign out</button></form>
