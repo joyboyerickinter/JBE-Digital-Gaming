@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { logout } from '@/app/login/actions';
@@ -54,10 +55,10 @@ export default async function Dashboard({ searchParams }: DashboardProps) {
 
       <div className="dashboardWrap">
         <header className="dashboardTopbar">
-          <a href="/" className="brand"><span className="brandMark"><b>J</b><strong>BE</strong><i /></span><span><b>JBE</b><small>Digital + Gaming</small></span></a>
-          <div className="dashboardTopActions"><a href="/dashboard/profile" className="adminBtn">Profile</a><a href="/dashboard/invoices" className="adminBtn">Invoices</a>
+          <Link href="/" className="brand"><span className="brandMark"><b>J</b><strong>BE</strong><i /></span><span><b>JBE</b><small>Digital + Gaming</small></span></Link>
+          <div className="dashboardTopActions"><Link href="/dashboard/profile" className="adminBtn">Profile</Link><Link href="/dashboard/invoices" className="adminBtn">Invoices</Link>
             {!isAdmin && <NotificationBell userId={userId} />}
-            {isAdmin && <a href="/admin" className="adminBtn">Admin Portal</a>}
+            {isAdmin && <Link href="/admin" className="adminBtn">Admin Portal</Link>}
             <span className="roleBadge">{isAdmin ? 'ADMIN' : 'RESELLER'}</span>
             <form action={logout}><button className="logoutBtn" type="submit">Sign out</button></form>
           </div>
@@ -68,7 +69,7 @@ export default async function Dashboard({ searchParams }: DashboardProps) {
           <div className="dashboardStats"><div><b>{catalog.length}</b><span>Products</span></div><div><b>{totalPackages}</b><span>Packages</span></div><div><b>{invoiceCount ?? 0}</b><span>My invoices</span></div></div>
         </section>
 
-        {!isAdmin && <section className="resellerQuickActions"><a href="/dashboard/orders" className="adminPrimaryBtn">New order →</a><a href="/dashboard/orders/history" className="resellerSecondaryBtn">Order history</a><a href="/dashboard/invoices" className="resellerSecondaryBtn">Invoices</a></section>}
+        {!isAdmin && <section className="resellerQuickActions"><Link href="/dashboard/orders" className="adminPrimaryBtn">New order →</Link><Link href="/dashboard/orders/history" className="resellerSecondaryBtn">Order history</Link><Link href="/dashboard/invoices" className="resellerSecondaryBtn">Invoices</Link></section>}
 
         <section className="dashboardSectionHead"><div><span className="miniLabel">RESELLER CATALOG</span><h2>Available packages</h2></div><span className="publicBadge">RESELLER PRICES</span></section>
 
