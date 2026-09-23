@@ -207,3 +207,9 @@ button.notificationBtn[data-global-loading]::after{
   margin-right:7px;
   animation:globalButtonSpin .65s linear infinite;
 }
+
+
+.passwordRecoveryPage{min-height:100vh;display:grid;place-items:center;padding:24px;background:#f7f8fa}
+.passwordRecoveryCard{width:min(100%,460px);background:#fff;border:1px solid #e4e7ec;border-radius:22px;padding:30px;box-shadow:0 18px 55px #10182812}
+.passwordRecoveryHead{text-align:center;margin-bottom:24px}.passwordRecoveryHead h1{font-size:28px;letter-spacing:-.04em;margin:12px 0 8px}.passwordRecoveryHead p{font-size:11px;color:#667085;line-height:1.7;margin:0}
+.passwordRecoveryForm{display:grid;gap:13px}.passwordRecoveryForm label{display:grid;gap:6px}.passwordRecoveryForm label>span{font-size:9px;font-weight:800;color:#344054}.passwordRecoveryForm input{height:42px;border:1px solid #d0d5dd;border-radius:10px;padding:0 12px;font:inherit;font-size:11px;outline:none}.passwordRecoveryForm input:focus{border-color:#667085;box-shadow:0 0 0 3px #10182808}.passwordRecoveryForm button{height:42px}.passwordRecoveryLinks{text-align:center;margin-top:16px;font-size:9px}.passwordRecoveryLinks a{color:#344054;font-weight:800;text-decoration:none}
