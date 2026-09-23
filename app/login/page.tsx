@@ -28,6 +28,7 @@ export default async function Login({ searchParams }: LoginPageProps) {
   return (
     <main className="loginPage">
       <LoginForm error={params.error} />
+      <div className="loginSupportLinks"><a href="https://t.me/JBE_OUTLINE_BOT" target="_blank" rel="noreferrer">Buy Outline VPN on Telegram →</a><span>Want a reseller account? <a href="https://t.me/Joy_Boy_Erick" target="_blank" rel="noreferrer">Contact @Joy_Boy_Erick</a></span></div>
     </main>
   );
 }
