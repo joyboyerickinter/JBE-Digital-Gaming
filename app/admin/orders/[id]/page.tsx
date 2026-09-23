@@ -33,7 +33,9 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
   }
 
   const items = [...(order.order_items ?? [])].sort((a: any, b: any) => a.sort_order - b.sort_order);
-  const resellerName = order.profiles?.full_name || 'Unknown reseller';
+  const resellerName = Array.isArray(order.profiles)
+    ? order.profiles[0]?.full_name || 'Unknown reseller'
+    : (order.profiles as any)?.full_name || 'Unknown reseller';
 
   return (
     <main className="invoicePreviewPage">
