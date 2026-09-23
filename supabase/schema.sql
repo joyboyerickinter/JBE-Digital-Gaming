@@ -9,6 +9,7 @@ create table if not exists public.products (
   slug text unique not null,
   description text,
   icon text,
+  image_path text,
   active boolean not null default true,
   sort_order integer not null default 0,
   created_at timestamptz not null default now()
@@ -72,3 +73,7 @@ drop policy if exists "Users can mark own notifications read" on public.notifica
 create policy "Users can mark own notifications read" on public.notifications for update to authenticated using ((select auth.uid()) = user_id) with check ((select auth.uid()) = user_id);
 drop policy if exists "Users can delete own notifications" on public.notifications;
 create policy "Users can delete own notifications" on public.notifications for delete to authenticated using ((select auth.uid()) = user_id);
+
+
+-- Product catalog images
+-- Public read is intentional because these are non-sensitive catalog assets.
