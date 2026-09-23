@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { logout } from '@/app/login/actions';
-import { savePrices } from './actions';
+import PricingManager from './PricingManager';
 
 type Props = { searchParams: Promise<{ success?: string; error?: string }> };
 type Product = { id: string; name: string; active: boolean; sort_order: number };
@@ -70,62 +70,21 @@ export default async function PricingAdmin({ searchParams }: Props) {
         </section>
 
         <section className="adminListSection">
-          <div className="dashboardSectionHead"><div><span className="miniLabel">ALL PACKAGES</span><h2>Manage pricing</h2></div><span className="publicBadge">{packageList.length} packages</span></div>
-
-          <div className="adminPriceList">
-            {productList.map(product => {
-              const productPackages = packageList.filter(pkg => pkg.product_id === product.id);
-              if (!productPackages.length) return null;
-
-              return (
-                <section className="adminPriceProduct" key={product.id}>
-                  <div className="adminPriceProductHead">
-                    <div><span className="miniLabel">{product.active ? 'ACTIVE PRODUCT' : 'INACTIVE PRODUCT'}</span><h3>{product.name}</h3></div>
-                    <span className="publicBadge">{productPackages.length} packages</span>
-                  </div>
-
-                  <div className="adminPriceRows">
-                    {productPackages.map(pkg => {
-                      const b2c = priceMap.get(`${pkg.id}:b2c`);
-                      const reseller = priceMap.get(`${pkg.id}:reseller`);
-
-                      return (
-                        <form action={savePrices} className="adminPriceRow" key={pkg.id}>
-                          <input type="hidden" name="package_id" value={pkg.id} />
-                          <div className="adminPricePackage">
-                            <strong>{pkg.name}</strong>
-                            <span>{pkg.active ? 'Active package' : 'Inactive package'} • #{pkg.sort_order}</span>
-                          </div>
-
-                          <label className="priceField">
-                            <span>B2C (MMK)</span>
-                            <input name="b2c_price" type="number" min="0" step="0.01" defaultValue={b2c?.price ?? 0} required />
-                          </label>
-
-                          <label className="priceField">
-                            <span>Reseller (MMK)</span>
-                            <input name="reseller_price" type="number" min="0" step="0.01" defaultValue={reseller?.price ?? 0} required />
-                          </label>
-
-                          <div className="priceStatus">
-                            <label><input name="b2c_active" type="checkbox" defaultChecked={b2c?.active ?? true} /> B2C</label>
-                            <label><input name="reseller_active" type="checkbox" defaultChecked={reseller?.active ?? true} /> Reseller</label>
-                          </div>
-
-                          <button className="adminPrimaryBtn" type="submit">Save</button>
-
-                          <div className="pricePreview">
-                            <span>Current B2C: <b>{formatPrice(b2c?.price ?? 0)} Ks</b></span>
-                            <span>Current Reseller: <b>{formatPrice(reseller?.price ?? 0)} Ks</b></span>
-                          </div>
-                        </form>
-                      );
-                    })}
-                  </div>
-                </section>
-              );
-            })}
-          </div>
+          <div className="dashboardSectionHead"><div><span className="miniLabel">PRODUCT PRICING</span><h2>Manage pricing</h2></div><span className="publicBadge">{packageList.length} packages</span></div>
+          <PricingManager products={productList.map(product => ({
+            ...product,
+            packages: packageList.filter(pkg => pkg.product_id === product.id).map(pkg => {
+              const b2c = priceMap.get(`${pkg.id}:b2c`);
+              const reseller = priceMap.get(`${pkg.id}:reseller`);
+              return {
+                ...pkg,
+                b2c_price: Number(b2c?.price ?? 0),
+                reseller_price: Number(reseller?.price ?? 0),
+                b2c_active: b2c?.active ?? true,
+                reseller_active: reseller?.active ?? true,
+              };
+            }),
+          })).filter(product => product.packages.length)} />
         </section>
 
         <footer className="dashboardFooter"><span>JBE Digital + Gaming</span><span>Admin-only pricing management</span></footer>
