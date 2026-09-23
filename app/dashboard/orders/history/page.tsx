@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { logout } from '@/app/login/actions';
+import SearchFilter from '@/app/SearchFilter';
 
 export default async function ResellerOrderHistoryPage() {
   const supabase = await createClient();
@@ -50,6 +51,7 @@ export default async function ResellerOrderHistoryPage() {
             <span className="publicBadge">{orders?.length ?? 0} shown</span>
           </div>
 
+          <SearchFilter placeholder="Search order, customer or item..." statuses={[{value:"pending",label:"Pending"},{value:"done",label:"Done"},{value:"cancel",label:"Cancelled"}]}>
           <div className="resellerOrderList">
             {(orders ?? []).length === 0 && <div className="invoiceEmpty">No orders yet. Create your first order above.</div>}
 
@@ -60,7 +62,7 @@ export default async function ResellerOrderHistoryPage() {
               ).join(' • ');
 
               return (
-                <article className="resellerOrderCard" key={order.id}>
+                <article className="resellerOrderCard" key={order.id} data-searchable={`${order.order_number} ${order.customer_name} ${order.customer_identifier} ${itemSummary}`} data-status={order.status}>
                   <div className="resellerOrderCardHead">
                     <div>
                       <span className="miniLabel">{order.order_number}</span>
@@ -88,6 +90,7 @@ export default async function ResellerOrderHistoryPage() {
               );
             })}
           </div>
+          </SearchFilter>
         </section>
 
         <footer className="dashboardFooter">
