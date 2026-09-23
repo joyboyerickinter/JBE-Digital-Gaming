@@ -99,10 +99,11 @@ export default async function CatalogAdmin({ searchParams }: Props) {
 
         <section className="adminListSection">
           <div className="dashboardSectionHead"><div><span className="miniLabel">PACKAGE MANAGEMENT</span><h2>Packages</h2></div><span className="publicBadge">{packageList.length} packages</span></div>
+          <SearchFilter placeholder="Search package or product..." statuses={[{ value: "active", label: "Active" }, { value: "inactive", label: "Inactive" }]}>
           <div className="adminEditList">
             {packageList.map(pkg=>{
               const product=productList.find(p=>p.id===pkg.product_id);
-              return <details className="adminEditCard" key={pkg.id}>
+              return <details className="adminEditCard" key={pkg.id} data-searchable={`${pkg.name} ${pkg.description ?? ""} ${product?.name ?? ""}`} data-status={pkg.active ? "active" : "inactive"}>
                 <summary><span><b>{pkg.name}</b><small>{product?.name ?? 'Unknown product'} • {pkg.active ? 'Active' : 'Inactive'}</small></span><em>#{pkg.sort_order}</em></summary>
                 <form action={updatePackage} className="adminEditForm">
                   <input type="hidden" name="id" value={pkg.id} />
@@ -116,6 +117,7 @@ export default async function CatalogAdmin({ searchParams }: Props) {
               </details>;
             })}
           </div>
+          </SearchFilter>
         </section>
 
         <footer className="dashboardFooter"><span>JBE Digital + Gaming</span><span>Admin-only catalog management</span></footer>
