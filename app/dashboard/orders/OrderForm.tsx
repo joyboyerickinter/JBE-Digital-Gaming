@@ -20,10 +20,25 @@ export default function OrderForm({ products }: { products:Product[] }) {
   const [items,setItems] = useState<Array<{productId:string;packageId:string;productName:string;packageName:string;price:number;quantity:number}>>([]);
 
   const addItem = () => {
-    const firstProduct=products[0], firstPackage=products[0]?.packages[0];
-    if (!firstProduct || !firstPackage) return;
-    if (items.some(i=>i.packageId===firstPackage.id)) return;
-    setItems(current=>[...current,{productId:firstProduct.id,packageId:firstPackage.id,productName:firstProduct.name,packageName:firstPackage.name,price:firstPackage.price,quantity:1}]);
+    const selectedPackageIds = new Set(items.map(item => item.packageId));
+    const available = products.flatMap(product =>
+      product.packages.map(pkg => ({ product, pkg }))
+    );
+    const next = available.find(({ pkg }) => !selectedPackageIds.has(pkg.id)) ?? available[0];
+    if (!next) return;
+
+    const { product, pkg } = next;
+    setItems(current => [
+      ...current,
+      {
+        productId: product.id,
+        packageId: pkg.id,
+        productName: product.name,
+        packageName: pkg.name,
+        price: pkg.price,
+        quantity: 1,
+      },
+    ]);
   };
 
   const updateProduct=(index:number,value:string)=>{
