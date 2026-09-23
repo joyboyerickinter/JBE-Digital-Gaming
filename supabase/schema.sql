@@ -47,3 +47,28 @@ create policy "Public can view active packages" on public.packages for select to
 
 drop policy if exists "Public can view B2C prices" on public.prices;
 create policy "Public can view B2C prices" on public.prices for select to anon, authenticated using (active = true and customer_type = 'b2c');
+
+
+-- Phase 2: reseller in-app notifications
+create table if not exists public.notifications (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references public.profiles(id) on delete cascade,
+  type text not null check (type in ('order_status')),
+  order_id uuid references public.orders(id) on delete cascade,
+  order_number text not null,
+  title text not null,
+  message text not null,
+  read_at timestamptz,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists notifications_user_created_idx on public.notifications(user_id, created_at desc);
+create index if not exists notifications_user_unread_idx on public.notifications(user_id, read_at) where read_at is null;
+
+alter table public.notifications enable row level security;
+drop policy if exists "Users can view own notifications" on public.notifications;
+create policy "Users can view own notifications" on public.notifications for select to authenticated using ((select auth.uid()) = user_id);
+drop policy if exists "Users can mark own notifications read" on public.notifications;
+create policy "Users can mark own notifications read" on public.notifications for update to authenticated using ((select auth.uid()) = user_id) with check ((select auth.uid()) = user_id);
+drop policy if exists "Users can delete own notifications" on public.notifications;
+create policy "Users can delete own notifications" on public.notifications for delete to authenticated using ((select auth.uid()) = user_id);
