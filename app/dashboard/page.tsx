@@ -75,7 +75,7 @@ export default async function Dashboard({ searchParams }: DashboardProps) {
         <section className="dashboardGrid">
           {catalog.map((product) => (
             <article className="dashboardProductCard" key={product.id}>
-              <div className="dashboardProductHead"><span className="productIcon">{product.image_path ? <img src={process.env.NEXT_PUBLIC_SUPABASE_URL + '/storage/v1/object/public/product-images/' + product.image_path} alt="" /> : <><span>{product.icon || 'JBE'}</span><i /></>}</span><div><span className="cardKicker">JBE BUSINESS</span><h3>{product.name}</h3></div><span className="countPill">{product.packages.length} plans</span></div>
+              <div className="dashboardProductHead"><span className="productIcon">{product.image_path ? <img src={process.env.NEXT_PUBLIC_SUPABASE_URL + '/storage/v1/object/public/product-images/' + product.image_path} alt="" width={64} height={64} loading="lazy" decoding="async" /> : <><span>{product.icon || 'JBE'}</span><i /></>}</span><div><span className="cardKicker">JBE BUSINESS</span><h3>{product.name}</h3></div><span className="countPill">{product.packages.length} plans</span></div>
               <div className="dashboardPackageList">
                 {product.packages.map((pkg) => <div className="dashboardPackageRow" key={pkg.id}><div><strong>{pkg.name}</strong><span>Reseller price</span></div><b>{formatKs(pkg.price)}</b></div>)}
               </div>
