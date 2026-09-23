@@ -313,3 +313,10 @@ button:disabled,input:disabled,select:disabled,textarea:disabled{cursor:not-allo
 @keyframes loadingPulse{50%{opacity:.52}}
 @media(max-width:600px){.pageLoading{padding:14px}.pageLoadingCard{padding:18px}.pageLoadingGrid{grid-template-columns:1fr}.skeletonCard{height:92px}.skeletonTitle{height:30px}}
 @media(prefers-reduced-motion:reduce){.skeletonBlock{animation:none}}
+
+
+.loginSupportLinks{display:grid;gap:8px;margin-top:18px;padding-top:15px;border-top:1px solid #f0f2f5;font-size:9px;color:#98a2b3;line-height:1.55}
+.loginSupportLinks a,.catalogSupportLinks a{color:#344054;font-weight:800}
+.loginSupportLinks a:hover,.catalogSupportLinks a:hover{color:#111827;text-decoration:underline}
+.catalogSupportLinks{display:flex;gap:12px;flex-wrap:wrap;justify-content:flex-end}
+@media(max-width:430px){.catalogSupportLinks{justify-content:flex-start;gap:7px 14px}.loginSupportLinks{font-size:10px}}
