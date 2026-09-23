@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
@@ -45,16 +46,16 @@ export default async function AccountsAdmin({ searchParams }: Props) {
 
       <div className="adminWrap">
         <header className="dashboardTopbar">
-          <a href="/" className="brand"><span className="brandMark"><b>J</b><strong>BE</strong><i /></span><span><b>JBE</b><small>Digital + Gaming</small></span></a>
+          <Link href="/" className="brand"><span className="brandMark"><b>J</b><strong>BE</strong><i /></span><span><b>JBE</b><small>Digital + Gaming</small></span></Link>
           <div className="dashboardTopActions">
-            <a href="/admin" className="adminBtn">Admin Home</a>
+            <Link href="/admin" className="adminBtn">Admin Home</Link>
             <form action={logout}><button className="logoutBtn" type="submit">Sign out</button></form>
           </div>
         </header>
 
         <section className="adminHero">
           <div><span className="miniLabel">ACCOUNT MANAGEMENT</span><h1>Reseller accounts.</h1><p>Create and manage reseller access. Maximum total accounts: 10.</p></div>
-          <a href="/admin" className="backBtn">← Admin home</a>
+          <Link href="/admin" className="backBtn">← Admin home</Link>
         </section>
 
         <section className="adminStats">
