@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 import { saveProductPrices } from './actions';
 import { useFormStatus } from 'react-dom';
+import SearchFilter from '@/app/SearchFilter';
 
 type Package = {
   id: string;
@@ -92,11 +93,12 @@ export default function PricingManager({ products }: { products: Product[] }) {
             <SaveButton />
           </div>
 
-          <div className="pricingBulkRows">
+          <SearchFilter placeholder="Search package...">
+            <div className="pricingBulkRows">
             {product.packages.map(pkg => {
               const value = values[pkg.id];
               return (
-                <div className="pricingBulkRow" key={pkg.id}>
+                <div className="pricingBulkRow" key={pkg.id} data-searchable={`${pkg.name} ${pkg.sort_order}`} data-status={pkg.active ? "active" : "inactive"}>
                   <div className="adminPricePackage">
                     <strong>{pkg.name}</strong>
                     <span>{pkg.active ? 'Active package' : 'Inactive package'} • #{pkg.sort_order}</span>
@@ -125,7 +127,8 @@ export default function PricingManager({ products }: { products: Product[] }) {
                 </div>
               );
             })}
-          </div>
+            </div>
+          </SearchFilter>
 
           <div className="pricingBulkFooter">
             <span>Update any number of packages above, then save once.</span>
