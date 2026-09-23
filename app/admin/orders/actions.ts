@@ -35,6 +35,19 @@ export async function updateOrderStatus(formData: FormData) {
   }
 
   const admin = createAdminClient();
+
+  const { data: currentOrder, error: currentOrderError } = await admin
+    .from('orders')
+    .select('id,order_number,reseller_id,status')
+    .eq('id', orderId)
+    .maybeSingle();
+
+  if (currentOrderError || !currentOrder) {
+    redirect(errorPath + '?error=Order%20not%20found');
+  }
+
+  const statusChanged = String(currentOrder.status) !== status;
+
   const { error } = await admin
     .from('orders')
     .update({
@@ -46,6 +59,26 @@ export async function updateOrderStatus(formData: FormData) {
 
   if (error) {
     redirect(errorPath + '?error=Could%20not%20update%20order%20status');
+  }
+
+  if (statusChanged) {
+    const statusLabel = status === 'done' ? 'DONE' : status === 'cancel' ? 'CANCELLED' : 'PENDING';
+    const message = status === 'cancel'
+      ? `Order ${String(currentOrder.order_number)} status has been changed to ${statusLabel}. Cancel reason: ${cancelReason}`
+      : `Order ${String(currentOrder.order_number)} status has been changed to ${statusLabel}.`;
+
+    const { error: notificationError } = await admin.from('notifications').insert({
+      user_id: String(currentOrder.reseller_id),
+      type: 'order_status',
+      order_id: String(currentOrder.id),
+      order_number: String(currentOrder.order_number),
+      title: `Order ${String(currentOrder.order_number)} updated`,
+      message,
+    });
+
+    if (notificationError) {
+      console.error('Reseller order notification failed:', notificationError);
+    }
   }
 
   redirect(errorPath + '?success=Order%20status%20updated');
