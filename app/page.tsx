@@ -1,13 +1,16 @@
-import { getCatalog, formatKs, type CatalogProduct } from '@/lib/catalog';
+import { getCatalog, formatKs, getProductImageUrl, type CatalogProduct } from '@/lib/catalog';
 import { createClient } from '@/lib/supabase/server';
 
-function ProductIcon({ value }: { value: string | null }) {
-  return <span className="productIcon" aria-hidden="true"><span>{value || 'JBE'}</span><i /></span>;
+function ProductIcon({ value, imagePath }: { value: string | null; imagePath: string | null }) {
+  const imageUrl = getProductImageUrl(imagePath);
+  return <span className="productIcon" aria-hidden="true">
+    {imageUrl ? <img src={imageUrl} alt="" /> : <><span>{value || 'JBE'}</span><i /></>}
+  </span>;
 }
 
 function ProductCard({ product }: { product: CatalogProduct }) {
   return <article className="productCard">
-    <div className="productCardTop"><ProductIcon value={product.icon}/><div><span className="cardKicker">JBE CATALOG</span><h2>{product.name}</h2></div><span className="countPill">{product.packages.length} plans</span></div>
+    <div className="productCardTop"><ProductIcon value={product.icon} imagePath={product.image_path}/><div><span className="cardKicker">JBE CATALOG</span><h2>{product.name}</h2></div><span className="countPill">{product.packages.length} plans</span></div>
     <div className="packageList">
       {product.packages.map((pkg) => <div className="packageRow" key={pkg.id}>
         <div><strong>{pkg.name}</strong><span>Available package</span></div>
