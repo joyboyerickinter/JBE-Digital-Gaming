@@ -1,11 +1,12 @@
 'use client';
 
+import type { ReactNode } from 'react';
 import { useEffect, useRef, useState } from 'react';
 
 type Props = {
   placeholder?: string;
   statuses?: { value: string; label: string }[];
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
 export default function SearchFilter({ placeholder = 'Search...', statuses = [], children }: Props) {
