@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
@@ -51,12 +52,12 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
 
       <div className="adminWrap">
         <header className="dashboardTopbar">
-          <a href="/" className="brand">
+          <Link href="/" className="brand">
             <span className="brandMark"><b>J</b><strong>BE</strong><i /></span>
             <span><b>JBE</b><small>Digital + Gaming</small></span>
-          </a>
+          </Link>
           <div className="dashboardTopActions">
-            <a href="/admin" className="adminBtn">Admin Home</a>
+            <Link href="/admin" className="adminBtn">Admin Home</Link>
             <form action={logout}><button className="logoutBtn" type="submit">Sign out</button></form>
           </div>
         </header>
@@ -67,7 +68,7 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
             <h1>Reseller orders.</h1>
             <p>Review incoming reseller orders, payment details and fulfillment status.</p>
           </div>
-          <a href="/admin" className="backBtn">← Admin home</a>
+          <Link href="/admin" className="backBtn">← Admin home</Link>
         </section>
 
         <section className="adminStats orderAdminStats">
@@ -118,7 +119,7 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
 
                   <div className="adminOrderBottom">
                     <p>{itemSummary || 'No items'}</p>
-                    <a href={'/admin/orders/' + order.id} className="invoiceViewLink">View order →</a>
+                    <Link href={'/admin/orders/' + order.id} className="invoiceViewLink">View order →</Link>
                   </div>
                 </div>
               );
