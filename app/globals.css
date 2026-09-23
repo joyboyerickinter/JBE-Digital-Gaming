@@ -93,3 +93,16 @@
 .orderStatusSaveBtn{width:max-content;border:0;border-radius:12px;padding:11px 16px;background:#111827;color:#fff;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
 .orderStatusSaveBtn:disabled{opacity:.65;cursor:not-allowed}
 @media(max-width:760px){.orderStatusControls{grid-template-columns:1fr}.orderStatusSaveBtn{width:100%;justify-content:center}}
+
+
+.resellerOrderList{display:grid;gap:14px}
+.resellerOrderCard{border:1px solid var(--line);border-radius:18px;background:#fff;padding:18px;display:grid;gap:16px}
+.resellerOrderCardHead{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
+.resellerOrderCardHead h3{margin:4px 0 5px;font-size:18px}
+.resellerOrderCardHead p,.resellerOrderCardBottom p{margin:0;color:var(--muted);font-size:13px}
+.resellerOrderMeta{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.resellerOrderMeta div{padding:11px 12px;border-radius:12px;background:#f7f8fa;display:grid;gap:4px}
+.resellerOrderMeta span{font-size:10px;font-weight:800;letter-spacing:.08em;color:var(--muted)}
+.resellerOrderMeta strong{font-size:13px}
+.resellerOrderCardBottom{display:grid;gap:12px}
+@media(max-width:760px){.resellerOrderCardHead{flex-direction:column}.resellerOrderMeta{grid-template-columns:repeat(2,minmax(0,1fr))}}
