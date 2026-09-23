@@ -43,10 +43,10 @@ export default async function Home() {
   }
 
   return <main className="page">
-    <header className="topbar"><div className="brand"><span className="brandMark"><b>J</b><strong>BE</strong><i/></span><span><b>JBE</b><small>Digital + Gaming</small></span></div><div className="topActions"><span className="statusDot">Live Catalog</span><a className="loginBtn" href={destination}>{actionLabel}</Link></div></header>
+    <header className="topbar"><div className="brand"><span className="brandMark"><b>J</b><strong>BE</strong><i/></span><span><b>JBE</b><small>Digital + Gaming</small></span></div><div className="topActions"><span className="statusDot">Live Catalog</span><Link className="loginBtn" href={destination}>{actionLabel}</Link></div></header>
     <section className="hero"><div className="eyebrow">DIGITAL PRODUCTS • GAME TOP-UP • RESELLER</div><h1>One place for your<br/><em>digital business.</em></h1><p>Browse JBE products and packages with clean, up-to-date B2C pricing.</p><div className="heroStats"><div><b>{catalog.length}</b><span>Products</span></div><div><b>{catalog.reduce((n,p)=>n+p.packages.length,0)}</b><span>Packages</span></div><div><b>24/7</b><span>Catalog Access</span></div></div></section>
     <section className="catalogHead"><div><span className="miniLabel">PRODUCT CATALOG</span><h2>Choose a product</h2></div><span className="publicBadge">B2C PRICES</span></section>
     <section className="catalogGrid">{catalog.map((p)=><ProductCard product={p} key={p.id}/>)}</section>
-    <footer><span>JBE Digital + Gaming</span><span>Public catalog • Reseller access requires login</span></footer>
+    <footer><span>JBE Digital + Gaming</span><span>Public catalog • Reseller access requires login</span><span className="catalogSupportLinks"><a href="https://t.me/JBE_OUTLINE_BOT" target="_blank" rel="noreferrer">Buy Outline VPN</a><a href="https://t.me/Joy_Boy_Erick" target="_blank" rel="noreferrer">Become a reseller</a></span></footer>
   </main>;
 }
