@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { logout } from '@/app/login/actions';
 import InvoiceForm from './InvoiceForm';
+import SearchFilter from '@/app/SearchFilter';
 
 type Props = { searchParams: Promise<{ success?: string; error?: string }> };
 
@@ -50,9 +51,10 @@ export default async function InvoicesPage({ searchParams }: Props) {
       <InvoiceForm products={productData} role={profile.role} />
       <section className="adminListSection">
         <div className="dashboardSectionHead"><div><span className="miniLabel">{profile.role === 'admin' ? 'RECENT INVOICES' : 'MY INVOICES'}</span><h2>Invoice history</h2></div><span className="publicBadge">{invoices?.length ?? 0} invoices</span></div>
+        <SearchFilter placeholder="Search invoice, customer or product..." statuses={[{value:"unpaid",label:"Unpaid"},{value:"paid",label:"Paid"}]}>
         <div className="invoiceHistory">
           {(invoices ?? []).length === 0 && <div className="invoiceEmpty">No invoices yet. Create your first invoice above.</div>}
-          {(invoices ?? []).map((invoice:any)=><details className="adminEditCard" key={invoice.id}>
+          {(invoices ?? []).map((invoice:any)=><details className="adminEditCard" key={invoice.id} data-searchable={`${invoice.invoice_number} ${invoice.customer_name} ${(invoice.invoice_items ?? []).map((x:any) => x.product_name + " " + x.package_name).join(" ")}`} data-status={invoice.payment_status}>
             <summary><span><b>{invoice.invoice_number}</b><small>{invoice.customer_name} • {(Number(invoice.price)||0).toLocaleString('en-US')} Ks</small></span><em>{String(invoice.payment_status).toUpperCase()}</em></summary>
             <div className="invoiceHistoryBody">
               {(invoice.invoice_items ?? []).sort((a:any,b:any)=>a.sort_order-b.sort_order).map((item:any)=><div className="invoiceHistoryItem" key={item.product_name+item.package_name}><span>{item.product_name} — {item.package_name}</span><b>{(Number(item.price)||0).toLocaleString('en-US')} Ks</b></div>)}
@@ -60,6 +62,7 @@ export default async function InvoicesPage({ searchParams }: Props) {
             </div>
           </details>)}
         </div>
+        </SearchFilter>
       </section>
       <footer className="dashboardFooter"><span>JBE Digital + Gaming</span><span>Admin invoice management</span></footer>
     </div>
