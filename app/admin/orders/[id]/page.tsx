@@ -2,6 +2,7 @@ import { notFound, redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { logout } from '@/app/login/actions';
+import OrderStatusForm from './OrderStatusForm';
 
 export default async function AdminOrderDetail({ params }: { params: Promise<{ id: string }> }) {
   const supabase = await createClient();
@@ -76,6 +77,12 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
             ))}
           </div>
           <div className="orderDetailTotal"><span>Total</span><strong>{Number(order.total_amount).toLocaleString('en-US')} Ks</strong></div>
+        </section>
+
+        <section className="adminOrderDetailSection">
+          <div className="dashboardSectionHead"><div><span className="miniLabel">ORDER STATUS</span><h2>Update fulfillment status</h2></div></div>
+          <OrderStatusForm orderId={order.id} currentStatus={String(order.status)} currentReason={order.cancel_reason} />
+          {order.cancel_reason && <div className="orderCancelBox"><strong>Cancel reason</strong><p>{order.cancel_reason}</p></div>}
         </section>
 
         <section className="adminOrderDetailSection">
