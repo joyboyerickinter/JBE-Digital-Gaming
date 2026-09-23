@@ -247,3 +247,26 @@ html,body{overflow-x:hidden}
   .hero h1,.dashboardHero h1,.adminHero h1{font-size:38px}
   .productCard,.dashboardProductCard,.orderBuilder{padding-left:13px;padding-right:13px}
 }
+
+
+/* Mobile touch-target and overflow hardening */
+@media(max-width:430px){
+  .adminBtn,.adminPrimaryBtn,.resellerSecondaryBtn,.logoutBtn,.loginBtn,
+  .notificationBtn,.productImageUploadBtn,.orderStatusSaveBtn,
+  .invoiceAddBtn,.invoiceRemoveBtn,.backBtn{min-height:44px}
+  .notificationBtn{width:44px;height:44px}
+  .searchFilterBar .searchInputWrap{min-height:44px;height:44px}
+  .searchInputWrap button{width:36px;height:36px;min-width:36px}
+  .searchFilterBar>select,.pricingProductPicker select,
+  .adminForm input,.adminForm select,.adminForm textarea,
+  .adminEditForm input,.adminEditForm select,.adminEditForm textarea,
+  .priceField input,.orderMetaGrid input,.orderMetaGrid select,
+  .orderPaymentGrid input,.orderPaymentGrid select,
+  .orderItemRow input,.orderItemRow select,.profileForm input{min-height:44px}
+  .checkRow input,.productImageRemove input{width:20px!important;height:20px;min-width:20px;min-height:20px}
+  .notificationPanelHead button{min-height:44px;padding:8px 4px}
+  .notificationItem{min-height:64px;padding-top:14px;padding-bottom:14px}
+  .invoiceRemoveBtn{width:100%;justify-content:center}
+  .adminEditCard summary{min-height:60px;padding-top:10px;padding-bottom:10px}
+  .backBtn{padding:10px 2px;align-items:center}
+}
