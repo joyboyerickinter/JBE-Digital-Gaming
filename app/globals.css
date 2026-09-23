@@ -220,3 +220,30 @@ button.notificationBtn[data-global-loading]::after{
 .searchFilterBar>select{height:40px;min-width:135px;border:1px solid #d0d5dd;border-radius:10px;background:#fff;padding:0 10px;font:inherit;font-size:10px;color:#344054;outline:0}
 .searchFilterWrap [hidden]{display:none!important}
 @media(max-width:560px){.searchFilterBar{align-items:stretch;flex-direction:column}.searchFilterBar>select{width:100%}}
+
+
+/* Mobile responsive hardening: 360–430px */
+html,body{overflow-x:hidden}
+@media(max-width:430px){
+  .searchInputWrap input,.searchFilterBar>select{font-size:11px}
+  .searchFilterBar{padding:9px}
+  .searchFilterBar .searchInputWrap{min-width:0}
+  .adminPriceProductHead,.pricingBulkHead{gap:10px}
+  .adminPriceProductHead h3,.pricingBulkHead h3{min-width:0;overflow-wrap:anywhere}
+  .adminOrderMain h3,.resellerOrderCardHead h3{overflow-wrap:anywhere}
+  .orderBuilderTop{align-items:flex-start;flex-direction:column}
+  .orderBuilderTop .adminPrimaryBtn{width:100%}
+  .adminOrderDetailHead,.orderDetailTop{flex-direction:column}
+  .adminOrderDetailHead .orderStatus,.orderDetailTop .orderStatus{align-self:flex-start}
+  .profileInfoList div{align-items:flex-start;flex-direction:column;gap:5px}
+  .profileInfoList strong{text-align:left}
+  .notificationPanel{position:fixed;right:14px;top:62px;width:calc(100vw - 28px);max-width:390px}
+}
+@media(max-width:360px){
+  .page,.dashboardPage,.adminPage{padding-left:12px;padding-right:12px}
+  .dashboardTopbar,.topbar{gap:10px}
+  .dashboardTopActions,.topActions{gap:5px}
+  .adminBtn,.logoutBtn,.loginBtn{padding-left:10px;padding-right:10px}
+  .hero h1,.dashboardHero h1,.adminHero h1{font-size:38px}
+  .productCard,.dashboardProductCard,.orderBuilder{padding-left:13px;padding-right:13px}
+}
