@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { logout } from '@/app/login/actions';
+import SearchFilter from '@/app/SearchFilter';
 
 type Props = { searchParams: Promise<{ error?: string }> };
 
@@ -82,6 +83,7 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
             <span className="publicBadge">{orders?.length ?? 0} shown</span>
           </div>
 
+          <SearchFilter placeholder="Search order, reseller, customer or item..." statuses={[{value:"pending",label:"Pending"},{value:"done",label:"Done"},{value:"cancel",label:"Cancelled"}]}>
           <div className="adminOrderList">
             {(orders ?? []).length === 0 && (
               <div className="invoiceEmpty">No reseller orders yet.</div>
@@ -95,7 +97,7 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
               const resellerName = order.profiles?.full_name || 'Unknown reseller';
 
               return (
-                <div className="adminOrderCard" key={order.id}>
+                <div className="adminOrderCard" key={order.id} data-searchable={`${order.order_number} ${resellerName} ${order.customer_name} ${order.customer_identifier} ${itemSummary}`} data-status={order.status}>
                   <div className="adminOrderMain">
                     <div>
                       <span className="miniLabel">{order.order_number}</span>
@@ -122,6 +124,7 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
               );
             })}
           </div>
+          </SearchFilter>
         </section>
 
         <footer className="dashboardFooter">
