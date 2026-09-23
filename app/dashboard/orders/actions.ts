@@ -56,10 +56,10 @@ export async function createOrder(formData: FormData) {
   const cleanItems = items.map(item => {
     const pkg:any = packageMap.get(item.package_id);
     const price = Number(pkg?.prices?.find((p:any) => p.customer_type === 'reseller' && p.active)?.price ?? 0);
-    return { ...item, product_name: String(pkg?.products?.name || ''), package_name: String(pkg?.name || ''), reseller_price: price };
+    return { ...item, product_name: String(pkg?.products?.name || ''), package_name: String(pkg?.name || ''), product_active: Boolean(pkg?.products?.active), reseller_price: price };
   });
 
-  if (cleanItems.some(item => !item.product_name || !item.package_name || item.reseller_price <= 0 || !item.package_id || item.product_id !== String(packageMap.get(item.package_id)?.product_id || ''))) {
+  if (cleanItems.some(item => !item.product_name || !item.package_name || item.reseller_price <= 0 || !item.package_id || !item.product_active || item.product_id !== String(packageMap.get(item.package_id)?.product_id || ''))) {
     redirect(errorPath + '?error=One%20or%20more%20packages%20are%20unavailable');
   }
 
