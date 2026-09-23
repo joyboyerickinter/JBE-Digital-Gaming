@@ -46,6 +46,7 @@ export default async function Dashboard({ searchParams }: DashboardProps) {
 
   const params = await searchParams;
   const totalPackages = catalog.reduce((sum, product) => sum + product.packages.length, 0);
+  const isAdmin = profile.role === 'admin';
 
   return (
     <main className="dashboardPage">
@@ -55,9 +56,9 @@ export default async function Dashboard({ searchParams }: DashboardProps) {
         <header className="dashboardTopbar">
           <a href="/" className="brand"><span className="brandMark"><b>J</b><strong>BE</strong><i /></span><span><b>JBE</b><small>Digital + Gaming</small></span></a>
           <div className="dashboardTopActions"><a href="/dashboard/invoices" className="adminBtn">Invoices</a>
-            <NotificationBell userId={userId} />
-            {profile.role === 'admin' && <a href="/admin" className="adminBtn">Admin Portal</a>}
-            <span className="roleBadge">{profile.role === 'admin' ? 'ADMIN' : 'RESELLER'}</span>
+            {!isAdmin && <NotificationBell userId={userId} />}
+            {isAdmin && <a href="/admin" className="adminBtn">Admin Portal</a>}
+            <span className="roleBadge">{isAdmin ? 'ADMIN' : 'RESELLER'}</span>
             <form action={logout}><button className="logoutBtn" type="submit">Sign out</button></form>
           </div>
         </header>
@@ -67,7 +68,7 @@ export default async function Dashboard({ searchParams }: DashboardProps) {
           <div className="dashboardStats"><div><b>{catalog.length}</b><span>Products</span></div><div><b>{totalPackages}</b><span>Packages</span></div><div><b>{invoiceCount ?? 0}</b><span>My invoices</span></div></div>
         </section>
 
-        <section className="resellerQuickActions"><a href="/dashboard/orders" className="adminPrimaryBtn">New order →</a><a href="/dashboard/orders/history" className="resellerSecondaryBtn">Order history</a><a href="/dashboard/invoices" className="resellerSecondaryBtn">Invoices</a></section>
+        {!isAdmin && <section className="resellerQuickActions"><a href="/dashboard/orders" className="adminPrimaryBtn">New order →</a><a href="/dashboard/orders/history" className="resellerSecondaryBtn">Order history</a><a href="/dashboard/invoices" className="resellerSecondaryBtn">Invoices</a></section>}
 
         <section className="dashboardSectionHead"><div><span className="miniLabel">RESELLER CATALOG</span><h2>Available packages</h2></div><span className="publicBadge">RESELLER PRICES</span></section>
 
