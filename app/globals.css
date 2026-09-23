@@ -270,3 +270,23 @@ html,body{overflow-x:hidden}
   .adminEditCard summary{min-height:60px;padding-top:10px;padding-bottom:10px}
   .backBtn{padding:10px 2px;align-items:center}
 }
+
+
+/* Mobile navigation/header safety: no drawer exists, so keep the existing action menu wrapped and reachable. */
+@media(max-width:430px){
+  .topbar,.dashboardTopbar{align-items:flex-start;min-width:0}
+  .topbar .brand,.dashboardTopbar .brand{min-width:0;flex:1 1 auto}
+  .topActions,.dashboardTopActions{min-width:0;max-width:100%;flex:0 1 auto;flex-wrap:wrap;justify-content:flex-end;row-gap:6px}
+  .dashboardTopActions .adminBtn,.dashboardTopActions .logoutBtn{min-width:44px;white-space:nowrap}
+  .dashboardTopActions .notificationWrap{flex:0 0 44px}
+  .dashboardTopActions .notificationBtn{margin:0}
+  .dashboardTopActions form{margin:0}
+  .dashboardTopActions a,.dashboardTopActions button{max-width:100%}
+}
+@media(max-width:380px){
+  .topbar,.dashboardTopbar{gap:8px}
+  .dashboardTopActions{flex-basis:100%;width:100%;justify-content:flex-start;padding-top:2px}
+  .dashboardTopbar{flex-wrap:wrap}
+  .dashboardTopActions .adminBtn,.dashboardTopActions .logoutBtn{flex:1 1 92px}
+  .dashboardTopActions .notificationWrap{flex:0 0 44px}
+}
