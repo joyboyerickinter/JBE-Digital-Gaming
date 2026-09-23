@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
@@ -21,8 +22,8 @@ export default async function OrdersPage({ searchParams }: { searchParams:Promis
   return <main className="adminPage">
     {params.error&&<div className="loginAlert loginAlertError" role="alert"><span>!</span><div><strong>Order failed</strong><p>{params.error}</p></div></div>}
     <div className="adminWrap">
-      <header className="dashboardTopbar"><a href="/" className="brand"><span className="brandMark"><b>J</b><strong>BE</strong><i /></span><span><b>JBE</b><small>Digital + Gaming</small></span></a><div className="dashboardTopActions"><a href="/dashboard" className="adminBtn">Dashboard</a><form action={logout}><button className="logoutBtn" type="submit">Sign out</button></form></div></header>
-      <section className="adminHero"><div><span className="miniLabel">RESELLER ORDERS</span><h1>Place your order.</h1><p>Choose multiple packages at reseller pricing, then send payment proof for processing.</p></div><a href="/dashboard" className="backBtn">← Dashboard</a></section>
+      <header className="dashboardTopbar"><Link href="/" className="brand"><span className="brandMark"><b>J</b><strong>BE</strong><i /></span><span><b>JBE</b><small>Digital + Gaming</small></span></Link><div className="dashboardTopActions"><Link href="/dashboard" className="adminBtn">Dashboard</Link><form action={logout}><button className="logoutBtn" type="submit">Sign out</button></form></div></header>
+      <section className="adminHero"><div><span className="miniLabel">RESELLER ORDERS</span><h1>Place your order.</h1><p>Choose multiple packages at reseller pricing, then send payment proof for processing.</p></div><Link href="/dashboard" className="backBtn">← Dashboard</Link></section>
       <OrderForm products={productData}/>
     </div>
   </main>;
