@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { logout } from '@/app/login/actions';
@@ -53,16 +54,16 @@ export default async function PricingAdmin({ searchParams }: Props) {
 
       <div className="adminWrap">
         <header className="dashboardTopbar">
-          <a href="/" className="brand"><span className="brandMark"><b>J</b><strong>BE</strong><i /></span><span><b>JBE</b><small>Digital + Gaming</small></span></a>
+          <Link href="/" className="brand"><span className="brandMark"><b>J</b><strong>BE</strong><i /></span><span><b>JBE</b><small>Digital + Gaming</small></span></Link>
           <div className="dashboardTopActions">
-            <a href="/admin" className="adminBtn">Admin Home</a>
+            <Link href="/admin" className="adminBtn">Admin Home</Link>
             <form action={logout}><button className="logoutBtn" type="submit">Sign out</button></form>
           </div>
         </header>
 
         <section className="adminHero">
           <div><span className="miniLabel">PRICE MANAGEMENT</span><h1>B2C & reseller prices.</h1><p>Update both customer prices for every package. Changes are reflected across the catalog.</p></div>
-          <a href="/admin" className="backBtn">← Admin home</a>
+          <Link href="/admin" className="backBtn">← Admin home</Link>
         </section>
 
         <section className="adminPriceNote">
