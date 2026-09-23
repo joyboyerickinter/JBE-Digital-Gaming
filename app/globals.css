@@ -290,3 +290,9 @@ html,body{overflow-x:hidden}
   .dashboardTopActions .adminBtn,.dashboardTopActions .logoutBtn{flex:1 1 92px}
   .dashboardTopActions .notificationWrap{flex:0 0 44px}
 }
+
+/* Accessibility: visible keyboard focus and reduced-motion support */
+:where(a,button,input,select,textarea,summary):focus-visible{outline:3px solid #98a2b3;outline-offset:3px}
+:where(a,button,input,select,textarea,summary):focus:not(:focus-visible){outline:none}
+button:disabled,input:disabled,select:disabled,textarea:disabled{cursor:not-allowed}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
