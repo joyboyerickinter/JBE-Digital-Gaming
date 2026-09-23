@@ -181,3 +181,29 @@ input[data-global-loading]{
 @keyframes globalButtonSpin{
   to{transform:rotate(360deg)}
 }
+
+
+/* Keep existing component-specific spinners from rendering a duplicate global spinner */
+button.loginSubmit[data-global-loading]::after,
+button.orderStatusSaveBtn[data-global-loading]::after,
+button.pricingBulkSaveBtn[data-global-loading]::after,
+button.invoiceGenerateBtn[data-global-loading]::after,
+button.orderSubmitBtn[data-global-loading]::after,
+button.notificationBtn[data-global-loading]::after{
+  display:none;
+}
+.notificationItem:disabled{
+  cursor:wait;
+  opacity:.72;
+}
+.buttonSpinner{
+  display:inline-block;
+  width:13px;
+  height:13px;
+  border:2px solid currentColor;
+  border-right-color:transparent;
+  border-radius:50%;
+  vertical-align:-3px;
+  margin-right:7px;
+  animation:globalButtonSpin .65s linear infinite;
+}
