@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 function ProductIcon({ value, imagePath }: { value: string | null; imagePath: string | null }) {
   const imageUrl = getProductImageUrl(imagePath);
   return <span className="productIcon" aria-hidden="true">
-    {imageUrl ? <img src={imageUrl} alt="" /> : <><span>{value || 'JBE'}</span><i /></>}
+    {imageUrl ? <img src={imageUrl} alt="" width={64} height={64} loading="lazy" decoding="async" /> : <><span>{value || 'JBE'}</span><i /></>}
   </span>;
 }
 
@@ -22,9 +22,10 @@ function ProductCard({ product }: { product: CatalogProduct }) {
 }
 
 export default async function Home() {
+  const supabase = await createClient();
   const [catalog, authResult] = await Promise.all([
     getCatalog(),
-    createClient().then((supabase) => supabase.auth.getClaims()),
+    supabase.auth.getClaims(),
   ]);
 
   const userId = authResult.data?.claims?.sub ? String(authResult.data.claims.sub) : null;
@@ -32,7 +33,6 @@ export default async function Home() {
   let actionLabel = 'Reseller Login →';
 
   if (userId) {
-    const supabase = await createClient();
     const { data: profile } = await supabase.from('profiles').select('role, active').eq('id', userId).maybeSingle();
 
     if (profile?.active) {
