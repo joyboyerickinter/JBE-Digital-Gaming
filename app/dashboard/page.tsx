@@ -65,7 +65,7 @@ export default async function Dashboard({ searchParams }: DashboardProps) {
           <div className="dashboardStats"><div><b>{catalog.length}</b><span>Products</span></div><div><b>{totalPackages}</b><span>Packages</span></div><div><b>{invoiceCount ?? 0}</b><span>My invoices</span></div></div>
         </section>
 
-        <section className="resellerQuickActions"><a href="/dashboard/orders" className="adminPrimaryBtn">New order →</a><a href="/dashboard/invoices" className="resellerSecondaryBtn">Invoices</a><a href="/dashboard/invoices" className="resellerSecondaryBtn">Invoice history</a></section>
+        <section className="resellerQuickActions"><a href="/dashboard/orders" className="adminPrimaryBtn">New order →</a><a href="/dashboard/orders/history" className="resellerSecondaryBtn">Order history</a><a href="/dashboard/invoices" className="resellerSecondaryBtn">Invoices</a></section>
 
         <section className="dashboardSectionHead"><div><span className="miniLabel">RESELLER CATALOG</span><h2>Available packages</h2></div><span className="publicBadge">RESELLER PRICES</span></section>
 
