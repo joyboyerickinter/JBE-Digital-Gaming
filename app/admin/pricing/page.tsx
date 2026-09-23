@@ -72,7 +72,7 @@ export default async function PricingAdmin({ searchParams }: Props) {
 
         <section className="adminListSection">
           <div className="dashboardSectionHead"><div><span className="miniLabel">PRODUCT PRICING</span><h2>Manage pricing</h2></div><span className="publicBadge">{packageList.length} packages</span></div>
-          <SearchFilter placeholder="Search product or package...">
+          <SearchFilter placeholder="Search package...">
             <PricingManager products={productList.map(product => ({
             ...product,
             packages: packageList.filter(pkg => pkg.product_id === product.id).map(pkg => {
