@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { logout } from '@/app/login/actions';
@@ -27,9 +28,9 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
     <main className="dashboardPage">
       <div className="dashboardWrap">
         <header className="dashboardTopbar">
-          <a href="/dashboard" className="brand"><span className="brandMark"><b>J</b><strong>BE</strong><i /></span><span><b>JBE</b><small>Digital + Gaming</small></span></a>
+          <Link href="/dashboard" className="brand"><span className="brandMark"><b>J</b><strong>BE</strong><i /></span><span><b>JBE</b><small>Digital + Gaming</small></span></Link>
           <div className="dashboardTopActions">
-            <a href="/dashboard" className="adminBtn">Dashboard</a>
+            <Link href="/dashboard" className="adminBtn">Dashboard</Link>
             <form action={logout}><button className="logoutBtn" type="submit">Sign out</button></form>
           </div>
         </header>
