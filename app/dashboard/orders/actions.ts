@@ -3,6 +3,7 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { sendAdminNewOrderEmail } from '@/lib/email';
 
 async function requireReseller() {
   const supabase = await createClient();
@@ -124,6 +125,27 @@ export async function createOrder(formData: FormData) {
     await admin.storage.from('order-screenshots').remove([screenshotPath]);
     await admin.from('orders').delete().eq('id', order.id);
     redirect(errorPath + '?error=Could%20not%20save%20order%20items');
+  }
+
+  const { data: resellerProfile } = await admin
+    .from('profiles')
+    .select('full_name')
+    .eq('id', resellerId)
+    .maybeSingle();
+
+  try {
+    await sendAdminNewOrderEmail({
+      order_number: String(order.order_number),
+      reseller_name: String(resellerProfile?.full_name || 'Reseller'),
+      customer_name: customerName,
+      customer_identifier: identifier,
+      customer_identifier_type: identifierType,
+      payment_method: paymentMethod,
+      transaction_last6: transactionLast6,
+      total_amount: total,
+    });
+  } catch (emailError) {
+    console.error('New order email notification failed:', emailError);
   }
 
   redirect('/dashboard/orders/' + order.id);
