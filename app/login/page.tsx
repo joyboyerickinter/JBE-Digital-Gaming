@@ -1,3 +1,5 @@
+import { redirect } from 'next/navigation';
+import { createClient } from '@/lib/supabase/server';
 import LoginForm from './LoginForm';
 
 type LoginPageProps = {
@@ -5,6 +7,22 @@ type LoginPageProps = {
 };
 
 export default async function Login({ searchParams }: LoginPageProps) {
+  const supabase = await createClient();
+  const { data } = await supabase.auth.getClaims();
+
+  if (data?.claims?.sub) {
+    const userId = String(data.claims.sub);
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role, active')
+      .eq('id', userId)
+      .maybeSingle();
+
+    if (profile?.active) {
+      redirect(profile.role === 'admin' ? '/admin' : '/dashboard');
+    }
+  }
+
   const params = await searchParams;
 
   return (
