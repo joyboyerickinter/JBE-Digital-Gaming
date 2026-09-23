@@ -25,10 +25,11 @@ export default async function Dashboard({ searchParams }: DashboardProps) {
     redirect('/login?error=Your%20account%20is%20inactive');
   }
 
-  const [{ data: products }, { data: packages }, { data: prices }] = await Promise.all([
+  const [{ data: products }, { data: packages }, { data: prices }, { count: invoiceCount }] = await Promise.all([
     supabase.from('products').select('id,name,icon,sort_order').eq('active', true).order('sort_order'),
     supabase.from('packages').select('id,product_id,name,sort_order').eq('active', true).order('sort_order'),
     supabase.from('prices').select('package_id,customer_type,price').eq('active', true).eq('customer_type', 'reseller'),
+    supabase.from('invoices').select('id', { count: 'exact', head: true }).eq('created_by', userId),
   ]);
 
   const catalog = ((products ?? []) as Product[]).map((product) => ({
@@ -52,7 +53,7 @@ export default async function Dashboard({ searchParams }: DashboardProps) {
       <div className="dashboardWrap">
         <header className="dashboardTopbar">
           <a href="/" className="brand"><span className="brandMark"><b>J</b><strong>BE</strong><i /></span><span><b>JBE</b><small>Digital + Gaming</small></span></a>
-          <div className="dashboardTopActions">            <a href="/dashboard/invoices" className="adminBtn">Invoices</a>
+          <div className="dashboardTopActions"><a href="/dashboard/invoices" className="adminBtn">Invoices</a>
             {profile.role === 'admin' && <a href="/admin" className="adminBtn">Admin Portal</a>}
             <span className="roleBadge">{profile.role === 'admin' ? 'ADMIN' : 'RESELLER'}</span>
             <form action={logout}><button className="logoutBtn" type="submit">Sign out</button></form>
@@ -61,8 +62,10 @@ export default async function Dashboard({ searchParams }: DashboardProps) {
 
         <section className="dashboardHero">
           <div><span className="miniLabel">JBE BUSINESS PORTAL</span><h1>Welcome back{profile.full_name ? `, ${profile.full_name}` : ''}.</h1><p>Manage your reseller orders with JBE pricing and business tools.</p></div>
-          <div className="dashboardStats"><div><b>{catalog.length}</b><span>Products</span></div><div><b>{totalPackages}</b><span>Packages</span></div><div><b>B2B</b><span>Reseller pricing</span></div></div>
+          <div className="dashboardStats"><div><b>{catalog.length}</b><span>Products</span></div><div><b>{totalPackages}</b><span>Packages</span></div><div><b>{invoiceCount ?? 0}</b><span>My invoices</span></div></div>
         </section>
+
+        <section className="resellerQuickActions"><a href="/dashboard/invoices" className="adminPrimaryBtn">Create invoice →</a><a href="/dashboard/invoices" className="resellerSecondaryBtn">View invoice history</a></section>
 
         <section className="dashboardSectionHead"><div><span className="miniLabel">RESELLER CATALOG</span><h2>Available packages</h2></div><span className="publicBadge">RESELLER PRICES</span></section>
 
