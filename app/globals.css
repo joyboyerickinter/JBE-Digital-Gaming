@@ -81,3 +81,15 @@
 .adminOrderDetailItem strong,.adminOrderDetailItem span{display:block}.adminOrderDetailItem strong{font-size:10px}.adminOrderDetailItem span{font-size:8px;color:#98a2b3;margin-top:4px}.adminOrderDetailItem>b{font-size:10px}
 .adminScreenshotBox{display:grid;gap:12px}.adminScreenshotBox img{display:block;width:100%;max-height:620px;object-fit:contain;background:#f8fafc;border:1px solid #eaecf0;border-radius:14px}.adminScreenshotBox .adminPrimaryBtn{width:max-content}.adminScreenshotBox p{font-size:8px;color:#98a2b3;margin:0}
 @media(max-width:760px){.adminOrderDetail{padding:22px 17px}.adminOrderDetailHead h1{font-size:23px}.adminOrderDetailGrid{grid-template-columns:1fr}.adminScreenshotBox .adminPrimaryBtn{width:100%}}
+
+
+.orderStatusForm{display:grid;gap:16px}
+.orderStatusControls{display:grid;grid-template-columns:minmax(220px,280px) 1fr;gap:16px;align-items:start}
+.orderStatusControls label{display:grid;gap:7px}
+.orderStatusControls label>span{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.orderStatusControls select,.orderStatusControls textarea{width:100%;border:1px solid var(--line);border-radius:12px;background:#fff;padding:12px 13px;font:inherit;color:var(--text)}
+.orderStatusControls textarea{resize:vertical;min-height:86px}
+.orderCancelReasonField b{color:#b42318}
+.orderStatusSaveBtn{width:max-content;border:0;border-radius:12px;padding:11px 16px;background:#111827;color:#fff;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.orderStatusSaveBtn:disabled{opacity:.65;cursor:not-allowed}
+@media(max-width:760px){.orderStatusControls{grid-template-columns:1fr}.orderStatusSaveBtn{width:100%;justify-content:center}}
