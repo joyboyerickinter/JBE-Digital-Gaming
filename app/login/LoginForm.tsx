@@ -67,10 +67,6 @@ export default function LoginForm({ error }: LoginFormProps) {
             </button>
           </form>
 
-          <div style={{ textAlign: 'right', marginTop: '-8px', marginBottom: '16px' }}>
-            <a href="/forgot-password" style={{ fontSize: '9px', fontWeight: 800, color: '#667085', textDecoration: 'none' }}>Forgot password?</a>
-          </div>
-
           <div className="loginHint"><span>●</span><p>Your reseller account is managed by JBE Digital + Gaming.</p></div>
           <a href="/" className="backBtn">← Back to public catalog</a>
         </div>
