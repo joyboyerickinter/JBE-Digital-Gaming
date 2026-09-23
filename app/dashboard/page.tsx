@@ -55,7 +55,7 @@ export default async function Dashboard({ searchParams }: DashboardProps) {
       <div className="dashboardWrap">
         <header className="dashboardTopbar">
           <a href="/" className="brand"><span className="brandMark"><b>J</b><strong>BE</strong><i /></span><span><b>JBE</b><small>Digital + Gaming</small></span></a>
-          <div className="dashboardTopActions"><a href="/dashboard/invoices" className="adminBtn">Invoices</a>
+          <div className="dashboardTopActions"><a href="/dashboard/profile" className="adminBtn">Profile</a><a href="/dashboard/invoices" className="adminBtn">Invoices</a>
             {!isAdmin && <NotificationBell userId={userId} />}
             {isAdmin && <a href="/admin" className="adminBtn">Admin Portal</a>}
             <span className="roleBadge">{isAdmin ? 'ADMIN' : 'RESELLER'}</span>
