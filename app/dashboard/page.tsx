@@ -5,7 +5,7 @@ import NotificationBell from '@/app/dashboard/NotificationBell';
 
 type DashboardProps = { searchParams: Promise<{ success?: string }> };
 
-type Product = { id: string; name: string; icon: string | null; sort_order: number };
+type Product = { id: string; name: string; icon: string | null; image_path: string | null; sort_order: number };
 type Package = { id: string; product_id: string; name: string; sort_order: number };
 type Price = { package_id: string; customer_type: string; price: number | string };
 
@@ -27,7 +27,7 @@ export default async function Dashboard({ searchParams }: DashboardProps) {
   }
 
   const [{ data: products }, { data: packages }, { data: prices }, { count: invoiceCount }] = await Promise.all([
-    supabase.from('products').select('id,name,icon,sort_order').eq('active', true).order('sort_order'),
+    supabase.from('products').select('id,name,icon,image_path,sort_order').eq('active', true).order('sort_order'),
     supabase.from('packages').select('id,product_id,name,sort_order').eq('active', true).order('sort_order'),
     supabase.from('prices').select('package_id,customer_type,price').eq('active', true).eq('customer_type', 'reseller'),
     supabase.from('invoices').select('id', { count: 'exact', head: true }).eq('created_by', userId),
@@ -75,7 +75,7 @@ export default async function Dashboard({ searchParams }: DashboardProps) {
         <section className="dashboardGrid">
           {catalog.map((product) => (
             <article className="dashboardProductCard" key={product.id}>
-              <div className="dashboardProductHead"><span className="productIcon"><span>{product.icon || 'JBE'}</span><i /></span><div><span className="cardKicker">JBE BUSINESS</span><h3>{product.name}</h3></div><span className="countPill">{product.packages.length} plans</span></div>
+              <div className="dashboardProductHead"><span className="productIcon">{product.image_path ? <img src={process.env.NEXT_PUBLIC_SUPABASE_URL + '/storage/v1/object/public/product-images/' + product.image_path} alt="" /> : <><span>{product.icon || 'JBE'}</span><i /></>}</span><div><span className="cardKicker">JBE BUSINESS</span><h3>{product.name}</h3></div><span className="countPill">{product.packages.length} plans</span></div>
               <div className="dashboardPackageList">
                 {product.packages.map((pkg) => <div className="dashboardPackageRow" key={pkg.id}><div><strong>{pkg.name}</strong><span>Reseller price</span></div><b>{formatKs(pkg.price)}</b></div>)}
               </div>
