@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { logout } from '@/app/login/actions';
+import NotificationBell from '@/app/dashboard/NotificationBell';
 
 type DashboardProps = { searchParams: Promise<{ success?: string }> };
 
@@ -54,6 +55,7 @@ export default async function Dashboard({ searchParams }: DashboardProps) {
         <header className="dashboardTopbar">
           <a href="/" className="brand"><span className="brandMark"><b>J</b><strong>BE</strong><i /></span><span><b>JBE</b><small>Digital + Gaming</small></span></a>
           <div className="dashboardTopActions"><a href="/dashboard/invoices" className="adminBtn">Invoices</a>
+            <NotificationBell userId={userId} />
             {profile.role === 'admin' && <a href="/admin" className="adminBtn">Admin Portal</a>}
             <span className="roleBadge">{profile.role === 'admin' ? 'ADMIN' : 'RESELLER'}</span>
             <form action={logout}><button className="logoutBtn" type="submit">Sign out</button></form>
