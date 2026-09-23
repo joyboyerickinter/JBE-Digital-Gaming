@@ -58,7 +58,6 @@ export async function createProduct(formData: FormData) {
     slug,
     description: text(formData, 'description') || null,
     icon: text(formData, 'icon') || null,
-    image_path: nextImagePath,
     sort_order: number(formData, 'sort_order'),
     active: true,
   }).select('id').single();
@@ -104,6 +103,7 @@ export async function updateProduct(formData: FormData) {
     slug,
     description: text(formData, 'description') || null,
     icon: text(formData, 'icon') || null,
+    image_path: nextImagePath,
     sort_order: number(formData, 'sort_order'),
     active: formData.get('active') === 'on',
   }).eq('id', id);
