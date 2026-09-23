@@ -17,6 +17,8 @@ export default function NotificationBell({ userId }: { userId: string }) {
   const supabase = useMemo(() => createClient(), []);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [open, setOpen] = useState(false);
+  const [markingId, setMarkingId] = useState<string | null>(null);
+  const [markingAll, setMarkingAll] = useState(false);
 
   const unreadCount = notifications.filter((item) => !item.read_at).length;
 
@@ -67,20 +69,31 @@ export default function NotificationBell({ userId }: { userId: string }) {
   }, [supabase, userId]);
 
   async function markRead(notification: Notification) {
-    if (!notification.read_at) {
-      await supabase.from('notifications').update({ read_at: new Date().toISOString() }).eq('id', notification.id).eq('user_id', userId);
-      setNotifications((current) => current.map((item) => item.id === notification.id ? { ...item, read_at: new Date().toISOString() } : item));
+    setMarkingId(notification.id);
+    try {
+      if (!notification.read_at) {
+        const now = new Date().toISOString();
+        await supabase.from('notifications').update({ read_at: now }).eq('id', notification.id).eq('user_id', userId);
+        setNotifications((current) => current.map((item) => item.id === notification.id ? { ...item, read_at: now } : item));
+      }
+      if (notification.order_id) window.location.href = `/dashboard/orders/${notification.order_id}`;
+    } finally {
+      setMarkingId(null);
     }
-    if (notification.order_id) window.location.href = `/dashboard/orders/${notification.order_id}`;
   }
 
   async function markAllRead() {
     const unreadIds = notifications.filter((item) => !item.read_at).map((item) => item.id);
     if (!unreadIds.length) return;
 
-    const now = new Date().toISOString();
-    await supabase.from('notifications').update({ read_at: now }).in('id', unreadIds).eq('user_id', userId);
-    setNotifications((current) => current.map((item) => item.read_at ? item : { ...item, read_at: now }));
+    setMarkingAll(true);
+    try {
+      const now = new Date().toISOString();
+      await supabase.from('notifications').update({ read_at: now }).in('id', unreadIds).eq('user_id', userId);
+      setNotifications((current) => current.map((item) => item.read_at ? item : { ...item, read_at: now }));
+    } finally {
+      setMarkingAll(false);
+    }
   }
 
   return (
@@ -99,7 +112,7 @@ export default function NotificationBell({ userId }: { userId: string }) {
         <div className="notificationPanel">
           <div className="notificationPanelHead">
             <div><strong>Notifications</strong><span>{unreadCount} unread</span></div>
-            <button type="button" onClick={markAllRead} disabled={!unreadCount}>Mark all read</button>
+            <button type="button" onClick={markAllRead} disabled={!unreadCount || markingAll}>{markingAll ? <><span className="buttonSpinner" aria-hidden="true" />Updating...</> : 'Mark all read'}</button>
           </div>
 
           <div className="notificationList">
@@ -109,10 +122,11 @@ export default function NotificationBell({ userId }: { userId: string }) {
                 type="button"
                 className={`notificationItem${item.read_at ? '' : ' notificationUnread'}`}
                 onClick={() => markRead(item)}
+                disabled={markingId === item.id}
               >
                 <span className="notificationDot" />
                 <span>
-                  <strong>{item.title}</strong>
+                  <strong>{markingId === item.id ? <><span className="buttonSpinner" aria-hidden="true" /> Opening...</> : item.title}</strong>
                   <small>{item.message}</small>
                   <em>{new Date(item.created_at).toLocaleString('en-GB')}</em>
                 </span>
