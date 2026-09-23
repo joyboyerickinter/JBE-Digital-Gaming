@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { logout } from '@/app/login/actions';
 import PricingManager from './PricingManager';
+import SearchFilter from '@/app/SearchFilter';
 
 type Props = { searchParams: Promise<{ success?: string; error?: string }> };
 type Product = { id: string; name: string; active: boolean; sort_order: number };
@@ -71,7 +72,8 @@ export default async function PricingAdmin({ searchParams }: Props) {
 
         <section className="adminListSection">
           <div className="dashboardSectionHead"><div><span className="miniLabel">PRODUCT PRICING</span><h2>Manage pricing</h2></div><span className="publicBadge">{packageList.length} packages</span></div>
-          <PricingManager products={productList.map(product => ({
+          <SearchFilter placeholder="Search product or package...">
+            <PricingManager products={productList.map(product => ({
             ...product,
             packages: packageList.filter(pkg => pkg.product_id === product.id).map(pkg => {
               const b2c = priceMap.get(`${pkg.id}:b2c`);
@@ -85,6 +87,7 @@ export default async function PricingAdmin({ searchParams }: Props) {
               };
             }),
           })).filter(product => product.packages.length)} />
+          </SearchFilter>
         </section>
 
         <footer className="dashboardFooter"><span>JBE Digital + Gaming</span><span>Admin-only pricing management</span></footer>
