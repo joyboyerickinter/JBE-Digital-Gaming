@@ -6,7 +6,8 @@ type Props = { currentUrl?: string | null; inputId: string; allowRemove?: boolea
 
 export default function ProductImageField({ currentUrl, inputId, allowRemove = false }: Props) {
   const [preview, setPreview] = useState<string | null>(currentUrl ?? null);
-  const [removeImage, setRemoveImage] = useState(false);\n  const objectUrlRef = useRef<string | null>(null);
+  const [removeImage, setRemoveImage] = useState(false);
+  const objectUrlRef = useRef<string | null>(null);
 
   useEffect(() => {
     setPreview(currentUrl ?? null);
@@ -17,7 +18,9 @@ export default function ProductImageField({ currentUrl, inputId, allowRemove = f
     if (!file) return;
     if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) return;
     if (file.size > 5 * 1024 * 1024) return;
-    if (objectUrlRef.current) URL.revokeObjectURL(objectUrlRef.current);\n    objectUrlRef.current = URL.createObjectURL(file);\n    setPreview(objectUrlRef.current);
+    if (objectUrlRef.current) URL.revokeObjectURL(objectUrlRef.current);
+    objectUrlRef.current = URL.createObjectURL(file);
+    setPreview(objectUrlRef.current);
     setRemoveImage(false);
   };
 
