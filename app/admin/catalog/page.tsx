@@ -2,9 +2,10 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { logout } from '@/app/login/actions';
 import { createProduct, updateProduct, createPackage, updatePackage } from './actions';
+import ProductImageField from './ProductImageField';
 
 type Props = { searchParams: Promise<{ success?: string; error?: string }> };
-type Product = { id:string; name:string; slug:string; description:string|null; icon:string|null; active:boolean; sort_order:number };
+type Product = { id:string; name:string; slug:string; description:string|null; icon:string|null; image_path:string|null; active:boolean; sort_order:number };
 type Package = { id:string; product_id:string; name:string; description:string|null; active:boolean; sort_order:number };
 
 export default async function CatalogAdmin({ searchParams }: Props) {
@@ -17,7 +18,7 @@ export default async function CatalogAdmin({ searchParams }: Props) {
   if (profile.role !== 'admin') redirect('/dashboard');
 
   const [{ data: products }, { data: packages }] = await Promise.all([
-    supabase.from('products').select('id,name,slug,description,icon,active,sort_order').order('sort_order'),
+    supabase.from('products').select('id,name,slug,description,icon,image_path,active,sort_order').order('sort_order'),
     supabase.from('packages').select('id,product_id,name,description,active,sort_order').order('sort_order'),
   ]);
   const productList = (products ?? []) as Product[];
@@ -47,10 +48,11 @@ export default async function CatalogAdmin({ searchParams }: Props) {
           <article className="adminToolCard">
             <span className="miniLabel">NEW PRODUCT</span>
             <h2>Add a product</h2>
-            <form action={createProduct} className="adminForm">
+            <form action={createProduct} className="adminForm" encType="multipart/form-data">
               <label>Name<input name="name" placeholder="e.g. Mobile Legends" required /></label>
               <label>Slug<input name="slug" placeholder="e.g. mobile-legends" required /></label>
-              <label>Icon<input name="icon" placeholder="Optional icon text" /></label>
+              <label>Icon<input name="icon" placeholder="Optional fallback icon text" /></label>
+              <div><span className="adminFieldLabel">Product image</span><ProductImageField inputId="new-product-image" /></div>
               <label>Sort order<input name="sort_order" type="number" defaultValue="0" /></label>
               <label>Description<textarea name="description" placeholder="Optional description" /></label>
               <button className="adminPrimaryBtn" type="submit">Create product</button>
@@ -76,11 +78,12 @@ export default async function CatalogAdmin({ searchParams }: Props) {
             {productList.map(p=>(
               <details className="adminEditCard" key={p.id}>
                 <summary><span><b>{p.name}</b><small>{p.slug} • {p.active ? 'Active' : 'Inactive'}</small></span><em>{packageList.filter(x=>x.product_id===p.id).length} packages</em></summary>
-                <form action={updateProduct} className="adminEditForm">
+                <form action={updateProduct} className="adminEditForm" encType="multipart/form-data">
                   <input type="hidden" name="id" value={p.id} />
                   <label>Name<input name="name" defaultValue={p.name} required /></label>
                   <label>Slug<input name="slug" defaultValue={p.slug} required /></label>
                   <label>Icon<input name="icon" defaultValue={p.icon ?? ''} /></label>
+                  <div><span className="adminFieldLabel">Product image</span><ProductImageField inputId={"product-image-"+p.id} currentUrl={p.image_path ? process.env.NEXT_PUBLIC_SUPABASE_URL + "/storage/v1/object/public/product-images/" + p.image_path : null} allowRemove /></div>
                   <label>Sort order<input name="sort_order" type="number" defaultValue={p.sort_order} /></label>
                   <label>Description<textarea name="description" defaultValue={p.description ?? ''} /></label>
                   <label className="checkRow"><input name="active" type="checkbox" defaultChecked={p.active} /> Active</label>
