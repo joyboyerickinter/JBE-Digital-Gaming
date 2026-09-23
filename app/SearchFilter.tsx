@@ -73,15 +73,31 @@ export default function SearchFilter({ placeholder = 'Search...', statuses = [],
       </div>
 
       {hasFilter && totalCount > 0 && (
-        <div className="searchFilterMeta" aria-live="polite">
+        <div
+          className="searchFilterMeta"
+          aria-live="polite"
+          style={{ fontSize: 9, color: '#667085', padding: '0 2px' }}
+        >
           {resultCount} result{resultCount === 1 ? '' : 's'}
         </div>
       )}
 
       {showNoResults && (
-        <div className="searchFilterEmpty">
-          <strong>No matching results</strong>
-          <span>Try a different search term or filter.</span>
+        <div
+          className="searchFilterEmpty"
+          style={{
+            display: 'grid',
+            gap: 4,
+            padding: '24px 16px',
+            textAlign: 'center',
+            background: '#fff',
+            border: '1px solid #e4e7ec',
+            borderRadius: 14,
+            color: '#667085',
+          }}
+        >
+          <strong style={{ color: '#101828', fontSize: 11 }}>No matching results</strong>
+          <span style={{ fontSize: 9 }}>Try a different search term or filter.</span>
         </div>
       )}
 
