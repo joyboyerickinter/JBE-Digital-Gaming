@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { logout } from '@/app/login/actions';
 import { createProduct, updateProduct, createPackage, updatePackage } from './actions';
 import ProductImageField from './ProductImageField';
+import SearchFilter from '@/app/SearchFilter';
 
 type Props = { searchParams: Promise<{ success?: string; error?: string }> };
 type Product = { id:string; name:string; slug:string; description:string|null; icon:string|null; image_path:string|null; active:boolean; sort_order:number };
@@ -74,9 +75,10 @@ export default async function CatalogAdmin({ searchParams }: Props) {
 
         <section className="adminListSection">
           <div className="dashboardSectionHead"><div><span className="miniLabel">EXISTING CATALOG</span><h2>Products</h2></div><span className="publicBadge">{productList.length} products</span></div>
+          <SearchFilter placeholder="Search product or package..." statuses={[{ value: "active", label: "Active" }, { value: "inactive", label: "Inactive" }]}>
           <div className="adminEditList">
             {productList.map(p=>(
-              <details className="adminEditCard" key={p.id}>
+              <details className="adminEditCard" key={p.id} data-searchable={`${p.name} ${p.slug} ${p.description ?? ""} ${packageList.filter(x=>x.product_id===p.id).map(x=>x.name).join(" ")}`} data-status={p.active ? "active" : "inactive"}>
                 <summary><span><b>{p.name}</b><small>{p.slug} • {p.active ? 'Active' : 'Inactive'}</small></span><em>{packageList.filter(x=>x.product_id===p.id).length} packages</em></summary>
                 <form action={updateProduct} className="adminEditForm" encType="multipart/form-data">
                   <input type="hidden" name="id" value={p.id} />
@@ -92,6 +94,7 @@ export default async function CatalogAdmin({ searchParams }: Props) {
               </details>
             ))}
           </div>
+        </SearchFilter>
         </section>
 
         <section className="adminListSection">
