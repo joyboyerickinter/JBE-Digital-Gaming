@@ -1,8 +1,9 @@
 import { createGuestOrder } from '@/app/dashboard/orders/actions';
 import { getCatalog, formatKs } from '@/lib/catalog';
 
-export default async function GuestOrderPage() {
+export default async function GuestOrderPage({ searchParams }: { searchParams: Promise<{ package?: string }> }) {
   const catalog = await getCatalog();
+  const selectedPackage = (await searchParams).package ?? '';
 
   return (
     <main className="page">
@@ -15,13 +16,10 @@ export default async function GuestOrderPage() {
       <form action={createGuestOrder} className="orderForm" encType="multipart/form-data">
         <label>Name<input name="customer_name" required /></label>
         <label>Customer ID / Email<input name="customer_identifier" required /></label>
-        <select name="identifier_type" defaultValue="in_game_id">
-          <option value="in_game_id">Game ID</option>
-          <option value="email">Email</option>
-        </select>
+        <select name="identifier_type" defaultValue="in_game_id"><option value="in_game_id">Game ID</option><option value="email">Email</option></select>
 
         <label>Package
-          <select name="items" defaultValue="" required>
+          <select name="items" defaultValue={selectedPackage ? JSON.stringify([{ package_id: selectedPackage, quantity: 1 }]) : ''} required>
             <option value="" disabled>Select package</option>
             {catalog.flatMap(product => product.packages.map(pkg => (
               <option key={pkg.id} value={JSON.stringify([{ product_id: product.id, package_id: pkg.id, quantity: 1 }])}>
@@ -31,14 +29,9 @@ export default async function GuestOrderPage() {
           </select>
         </label>
 
-        <select name="payment_method" defaultValue="kpay">
-          <option value="kpay">KPay</option>
-          <option value="aya_pay">AYA Pay</option>
-        </select>
-
+        <select name="payment_method" defaultValue="kpay"><option value="kpay">KPay</option><option value="aya_pay">AYA Pay</option></select>
         <label>Transaction last 6 digits<input name="transaction_last6" required maxLength={6} /></label>
         <label>Payment Screenshot<input name="screenshot" type="file" accept="image/png,image/jpeg,image/webp" required /></label>
-
         <button type="submit">Submit Order</button>
       </form>
 
