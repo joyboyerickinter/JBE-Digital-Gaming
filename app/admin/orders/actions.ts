@@ -38,7 +38,7 @@ export async function updateOrderStatus(formData: FormData) {
 
   const { data: currentOrder, error: currentOrderError } = await admin
     .from('orders')
-    .select('id,order_number,reseller_id,status')
+    .select('id,order_number,reseller_id,source,status')
     .eq('id', orderId)
     .maybeSingle();
 
@@ -61,7 +61,7 @@ export async function updateOrderStatus(formData: FormData) {
     redirect(errorPath + '?error=Could%20not%20update%20order%20status');
   }
 
-  if (statusChanged) {
+  if (statusChanged && currentOrder.source === 'reseller' && currentOrder.reseller_id) {
     const statusLabel = status === 'done' ? 'DONE' : status === 'cancel' ? 'CANCELLED' : 'PENDING';
     const message = status === 'cancel'
       ? `Order ${String(currentOrder.order_number)} status has been changed to ${statusLabel}. Cancel reason: ${cancelReason}`
