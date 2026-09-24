@@ -30,7 +30,7 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
     await Promise.all([
       admin
         .from('orders')
-        .select('id,order_number,reseller_id,customer_identifier,customer_identifier_type,customer_name,payment_method,transaction_last6,status,total_amount,created_at,profiles(full_name),order_items(product_name,package_name,quantity,line_total,sort_order)')
+        .select('id,order_number,reseller_id,source,customer_identifier,customer_identifier_type,customer_name,payment_method,transaction_last6,status,total_amount,created_at,profiles(full_name),order_items(product_name,package_name,quantity,line_total,sort_order)')
         .order('created_at', { ascending: false })
         .limit(100),
       admin.from('orders').select('*', { count: 'exact', head: true }),
@@ -102,7 +102,7 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
                   <div className="adminOrderMain">
                     <div>
                       <span className="miniLabel">{order.order_number}</span>
-                      <h3>{resellerName}</h3>
+                      <h3>{order.source === 'guest' ? 'Website customer' : resellerName}</h3>
                       <p>{order.customer_name} • {order.customer_identifier}</p>
                     </div>
                     <span className={'orderStatus orderStatus' + String(order.status)}>
