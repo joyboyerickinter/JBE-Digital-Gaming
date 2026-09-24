@@ -13,12 +13,12 @@ export default async function GuestOrderPage({ searchParams }: { searchParams: P
         <p>Website customers can order using B2C pricing.</p>
       </section>
 
-      <form action={createGuestOrder} className="orderForm" encType="multipart/form-data">
-        <label>Name<input name="customer_name" required /></label>
-        <label>Customer ID / Email<input name="customer_identifier" required /></label>
-        <select name="identifier_type" defaultValue="in_game_id"><option value="in_game_id">Game ID</option><option value="email">Email</option></select>
+      <form action={createGuestOrder} className="orderForm guestOrderForm" encType="multipart/form-data">
+        <label className="formField">Name<input name="customer_name" autoComplete="name" required /></label>
+        <label className="formField">Customer ID / Email<input name="customer_identifier" autoComplete="email" required /></label>
+        <label className="formField">Identifier Type<select name="identifier_type" defaultValue="in_game_id"><option value="in_game_id">Game ID</option><option value="email">Email</option></select></label>
 
-        <label>Package
+        <label className="formField">Package
           <select name="items" defaultValue={selectedPackage ? JSON.stringify([{ package_id: selectedPackage, quantity: 1 }]) : ''} required>
             <option value="" disabled>Select package</option>
             {catalog.flatMap(product => product.packages.map(pkg => (
@@ -29,10 +29,10 @@ export default async function GuestOrderPage({ searchParams }: { searchParams: P
           </select>
         </label>
 
-        <select name="payment_method" defaultValue="kpay"><option value="kpay">KPay</option><option value="aya_pay">AYA Pay</option></select>
-        <label>Transaction last 6 digits<input name="transaction_last6" required maxLength={6} /></label>
-        <label>Payment Screenshot<input name="screenshot" type="file" accept="image/png,image/jpeg,image/webp" required /></label>
-        <button type="submit">Submit Order</button>
+        <label className="formField">Payment Method<select name="payment_method" defaultValue="kpay"><option value="kpay">KPay</option><option value="aya_pay">AYA Pay</option></select></label>
+        <label className="formField">Transaction last 6 digits<input name="transaction_last6" inputMode="numeric" maxLength={6} required /></label>
+        <label className="formField">Payment Screenshot<input name="screenshot" type="file" accept="image/png,image/jpeg,image/webp" required /></label>
+        <button className="orderSubmitBtn" type="submit">Submit Order</button>
       </form>
 
       <p>Outline VPN orders are available only through Telegram: <a href="https://t.me/JBE_OUTLINE_BOT">JBE_OUTLINE_BOT</a></p>
