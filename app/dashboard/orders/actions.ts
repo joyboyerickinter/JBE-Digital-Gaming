@@ -144,6 +144,7 @@ export async function createOrder(formData: FormData) {
       payment_method: paymentMethod,
       transaction_last6: transactionLast6,
       total_amount: total,
+      order_source: 'reseller',
     });
   } catch (emailError) {
     console.error('New order email notification failed:', emailError);
@@ -291,6 +292,7 @@ export async function createGuestOrder(formData: FormData) {
       payment_method: paymentMethod,
       transaction_last6: transactionLast6,
       total_amount: total,
+      order_source: 'guest',
     });
   } catch (emailError) {
     console.error('New guest order email notification failed:', emailError);
