@@ -77,3 +77,35 @@ create policy "Users can delete own notifications" on public.notifications for d
 
 -- Product catalog images
 -- Public read is intentional because these are non-sensitive catalog assets.
+
+
+-- Guest order support
+-- The production orders/order_items tables were created in earlier migrations.
+-- Keep this block idempotent so the schema documentation can be re-applied safely.
+alter table if exists public.orders
+  alter column reseller_id drop not null;
+
+alter table if exists public.orders
+  add column if not exists source text not null default 'reseller';
+
+do $$
+begin
+  if not exists (
+    select 1 from pg_constraint
+    where conname = 'orders_source_check'
+      and conrelid = 'public.orders'::regclass
+  ) then
+    alter table public.orders
+      add constraint orders_source_check check (source in ('reseller','guest'));
+  end if;
+end $$;
+
+alter table if exists public.orders
+  drop constraint if exists orders_reseller_id_fkey;
+
+alter table if exists public.orders
+  add constraint orders_reseller_id_fkey
+  foreign key (reseller_id) references public.profiles(id) on delete set null;
+
+create index if not exists orders_source_created_idx
+  on public.orders(source, created_at desc);
