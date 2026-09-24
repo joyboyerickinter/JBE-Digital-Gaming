@@ -21,7 +21,7 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
   const admin = createAdminClient();
   const { data: order } = await admin
     .from('orders')
-    .select('id,order_number,reseller_id,customer_identifier,customer_identifier_type,customer_name,payment_method,transaction_last6,screenshot_path,status,cancel_reason,total_amount,currency,created_at,updated_at,profiles(full_name),order_items(product_id,package_id,product_name,package_name,reseller_price,quantity,line_total,sort_order)')
+    .select('id,order_number,reseller_id,source,customer_identifier,customer_identifier_type,customer_name,payment_method,transaction_last6,screenshot_path,status,cancel_reason,total_amount,currency,created_at,updated_at,profiles(full_name),order_items(product_id,package_id,product_name,package_name,reseller_price,quantity,line_total,sort_order)')
     .eq('id', orderId)
     .maybeSingle();
 
@@ -57,7 +57,7 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
         </div>
 
         <section className="adminOrderDetailSection">
-          <div className="dashboardSectionHead"><div><span className="miniLabel">RESELLER</span><h2>{resellerName}</h2></div></div>
+          <div className="dashboardSectionHead"><div><span className="miniLabel">{order.source === 'guest' ? 'CUSTOMER SOURCE' : 'RESELLER'}</span><h2>{order.source === 'guest' ? 'Website customer' : resellerName}</h2></div></div>
           <div className="adminOrderDetailGrid">
             <div><span>Customer / Client</span><strong>{order.customer_name}</strong></div>
             <div><span>{order.customer_identifier_type === 'email' ? 'Email' : 'In-game ID'}</span><strong>{order.customer_identifier}</strong></div>
