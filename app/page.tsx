@@ -15,9 +15,9 @@ function ProductCard({ product }: { product: CatalogProduct }) {
     <div className="productCardTop"><ProductIcon value={product.icon} imagePath={product.image_path}/><div><span className="cardKicker">JBE CATALOG</span><h2>{product.name}</h2></div><span className="countPill">{product.packages.length} plans</span></div>
     <div className="packageList">
       {product.packages.map((pkg) => <div className="packageRow" key={pkg.id}>
-        <div><strong>{pkg.name}</strong><span>{isOutline ? 'Available through Telegram' : 'Available package'}</span></div>
+        <div><strong>{pkg.name}</strong><span>{isOutline ? 'Purchase via Telegram' : 'B2C package price'}</span></div>
         <b>{formatKs(pkg.b2c_price)}</b>
-        {isOutline ? <a className="buyBtn" href="https://t.me/JBE_OUTLINE_BOT" target="_blank" rel="noreferrer">Telegram</a> : <Link className="buyBtn" href={`/order?package=${pkg.id}`}>Buy Now</Link>}
+        {isOutline ? <a className="buyBtn" href="https://t.me/JBE_OUTLINE_BOT" target="_blank" rel="noreferrer">JBE_OUTLINE_BOT</a> : null}
       </div>)}
     </div>
     <div className="cardFooter"><span>B2C Price</span><span>•••</span></div>
@@ -37,9 +37,9 @@ export default async function Home() {
 
   return <main className="page">
     <header className="topbar"><div className="brand"><span className="brandMark"><b>J</b><strong>BE</strong><i/></span><span><b>JBE</b><small>Digital + Gaming</small></span></div><div className="topActions"><span className="statusDot">Live Catalog</span><Link className="loginBtn" href={destination}>{actionLabel}</Link></div></header>
-    <section className="hero"><div className="eyebrow">DIGITAL PRODUCTS • GAME TOP-UP • RESELLER</div><h1>One place for your<br/><em>digital business.</em></h1><p>Browse JBE products and packages with clean, up-to-date B2C pricing.</p></section>
+    <section className="hero"><div className="eyebrow">DIGITAL PRODUCTS • GAME TOP-UP • RESELLER</div><h1>One place for your<br/><em>digital business.</em></h1><p>Browse JBE products and packages with clean B2C pricing.</p><Link className="createOrderBtn" href="/order">Create Order</Link></section>
     <section className="catalogHead"><div><span className="miniLabel">PRODUCT CATALOG</span><h2>Choose a product</h2></div><span className="publicBadge">B2C PRICES</span></section>
-    <section className="catalogGrid">{catalog.map((p)=><ProductCard product={p} key={p.id}/>)}</section>
-    <footer><span>JBE Digital + Gaming</span><span>Public catalog • Reseller access requires login</span><span className="catalogSupportLinks"><a href="https://t.me/JBE_OUTLINE_BOT">Buy Outline VPN</a><a href="https://t.me/Joy_Boy_Erick">Become a reseller</a></span></footer>
+    <section className="catalogGrid">{catalog.map((p)=><ProductCard product={p} key={p.id/>)}</section>
+    <footer><span>JBE Digital + Gaming</span><span>Public catalog • Reseller access requires login</span><span className="catalogSupportLinks"><a href="https://t.me/JBE_OUTLINE_BOT">Telegram: JBE_OUTLINE_BOT</a><a href="https://t.me/Joy_Boy_Erick">Become a reseller</a></span></footer>
   </main>;
 }
