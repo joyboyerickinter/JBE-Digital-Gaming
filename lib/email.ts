@@ -1,6 +1,7 @@
 export async function sendAdminNewOrderEmail(order: {
   order_number: string;
   reseller_name: string;
+  order_source?: 'reseller' | 'guest';
   customer_name: string;
   customer_identifier: string;
   customer_identifier_type: string;
@@ -22,9 +23,9 @@ export async function sendAdminNewOrderEmail(order: {
 
   const html = `
     <div style="font-family:Arial,Helvetica,sans-serif;line-height:1.6;color:#101828">
-      <h2>New JBE Reseller Order</h2>
+      <h2>New JBE ${order.order_source === 'guest' ? 'Website Customer' : 'Reseller'} Order</h2>
       <p><strong>Order ID:</strong> ${order.order_number}</p>
-      <p><strong>Reseller:</strong> ${escapeHtml(order.reseller_name)}</p>
+      <p><strong>${order.order_source === 'guest' ? 'Source' : 'Reseller'}:</strong> ${escapeHtml(order.reseller_name)}</p>
       <p><strong>Customer:</strong> ${escapeHtml(order.customer_name)}</p>
       <p><strong>${identifierLabel}:</strong> ${escapeHtml(order.customer_identifier)}</p>
       <p><strong>Payment:</strong> ${paymentLabel} •••• ${escapeHtml(order.transaction_last6)}</p>
