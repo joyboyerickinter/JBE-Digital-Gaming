@@ -44,7 +44,7 @@ export default async function Home() {
           <strong>Order your product</strong>
           <span>Choose packages, pay with KPay / AYA Pay, and submit your payment screenshot.</span>
         </div>
-        <div className="homeOrderAction"><span>Start Order</span><b>→</b></div>
+        <div className="homeOrderAction"><span>Start Order</span></div>
       </Link></section>
     <section className="catalogHead"><div><span className="miniLabel">PRODUCT CATALOG</span><h2>Choose a product</h2></div><span className="publicBadge">B2C PRICES</span></section>
     <section className="catalogGrid">{catalog.map((p)=><ProductCard product={p} key={p.id}/>)}</section>
