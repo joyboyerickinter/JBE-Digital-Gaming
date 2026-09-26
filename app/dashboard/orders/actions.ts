@@ -298,5 +298,5 @@ export async function createGuestOrder(formData: FormData) {
     console.error('New guest order email notification failed:', emailError);
   }
 
-  redirect('/order/success?order=' + encodeURIComponent(String(order.order_number)));
+  redirect('/order?success=1&order=' + encodeURIComponent(String(order.order_number)));
 }
