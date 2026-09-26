@@ -1,6 +1,7 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { createGuestOrder } from '@/app/dashboard/orders/actions';
 import { useFormStatus } from 'react-dom';
 
@@ -14,6 +15,22 @@ function SubmitButton(){
 }
 
 export default function GuestOrderForm({products}:{products:Product[]}){
+ const router = useRouter();
+ const searchParams = useSearchParams();
+ useEffect(()=>{
+   const success = searchParams.get('success');
+   const order = searchParams.get('order');
+   const error = searchParams.get('error');
+   if (success) {
+     window.alert(`Order submitted successfully!\nOrder No: ${order || 'Pending'}`);
+     router.replace('/order');
+     return;
+   }
+   if (error) {
+     window.alert(`Order could not be submitted.\n${error}`);
+     router.replace('/order');
+   }
+ }, [router, searchParams]);
  const [identifierType,setIdentifierType]=useState('in_game_id');
  const [items,setItems]=useState<OrderItem[]>([]);
  const [paymentMethod,setPaymentMethod]=useState('kpay');
