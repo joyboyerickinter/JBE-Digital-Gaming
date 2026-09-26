@@ -329,3 +329,38 @@ button:disabled,input:disabled,select:disabled,textarea:disabled{cursor:not-allo
 .errorActions{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
 .resellerSecondaryBtn{height:38px;display:inline-flex;align-items:center;justify-content:center;border:1px solid #d0d5dd;border-radius:10px;background:#fff;color:#344054;padding:0 13px;font-size:10px;font-weight:800}
 @media(max-width:430px){.errorPage{padding:14px}.errorCard{padding:24px 18px}.errorActions{display:grid}.errorActions>*{width:100%}}
+
+
+/* Guest order UI polish */
+.guestOrderBuilder{width:min(900px,100%);margin:0 auto}
+.guestOrderBuilder .orderBuilderTop{background:#fff;border:1px solid #e4e7ec;border-radius:20px;padding:22px 24px;box-shadow:0 7px 25px #10182808}
+.guestOrderBuilder .orderBuilderTop h2{font-size:24px;letter-spacing:-.035em;margin:7px 0 6px}
+.guestOrderBuilder .orderBuilderTop p{margin:0;color:#667085;font-size:11px;line-height:1.6}
+.guestOrderBuilder .orderStep{background:#fff;border:1px solid #e4e7ec;border-radius:18px;padding:20px;box-shadow:0 7px 25px #10182808}
+.guestOrderBuilder .orderStepHead{align-items:flex-start}
+.guestOrderBuilder .orderStepHead>div{display:grid;gap:4px}
+.guestOrderBuilder .orderStepHead small{font-size:8px;color:#98a2b3;font-weight:500;line-height:1.5}
+.guestOrderBuilder .orderMetaGrid,.guestOrderBuilder .orderSelectGrid{gap:12px}
+.guestOrderBuilder label{display:grid;gap:6px;font-size:9px;font-weight:800;color:#344054}
+.guestOrderBuilder select,.guestOrderBuilder input[type=text],.guestOrderBuilder input[type=email],.guestOrderBuilder input[type=file],.guestOrderBuilder input[name=customer_identifier],.guestOrderBuilder input[name=customer_name],.guestOrderBuilder input[name=transaction_last6]{width:100%;min-height:42px;border:1px solid #d0d5dd;border-radius:10px;background:#fff;padding:0 11px;font:inherit;font-size:11px;color:#101828;outline:none}
+.guestOrderBuilder select:focus,.guestOrderBuilder input:focus{border-color:#667085;box-shadow:0 0 0 3px #10182808}
+.guestOrderBuilder select:disabled{background:#f8fafc;color:#98a2b3}
+.guestOrderBuilder input[type=file]{padding:9px 10px;height:auto}
+.guestPackageActions{display:flex;align-items:center;gap:10px;margin-top:12px}
+.guestPackageActions span{font-size:8px;color:#98a2b3}
+.guestPackageActions .invoiceAddBtn{min-height:38px}
+.guestPackageActions .invoiceAddBtn:disabled{opacity:.45;cursor:not-allowed}
+.guestEmptyPackages{display:grid;gap:4px;margin-top:12px;padding:14px;background:#f8fafc;border:1px dashed #d0d5dd;border-radius:11px}
+.guestEmptyPackages strong{font-size:9px}.guestEmptyPackages span{font-size:8px;color:#98a2b3}
+.guestOrderBuilder .orderItems{margin-top:14px;border:1px solid #eaecf0;border-radius:12px;overflow:hidden}
+.guestOrderBuilder .orderItemRow{display:grid;grid-template-columns:1.1fr 1.4fr .45fr .8fr auto;gap:10px;align-items:center;padding:12px;border-bottom:1px solid #f2f4f7;background:#fff}
+.guestOrderBuilder .orderItemRow:last-child{border-bottom:0}
+.guestOrderBuilder .orderItemRow>div{min-width:0}
+.guestOrderBuilder .orderItemRow span:first-child{display:block;font-size:7px;color:#98a2b3;font-weight:900;letter-spacing:.08em;margin-bottom:4px}
+.guestOrderBuilder .orderItemRow strong{display:block;font-size:9px;overflow-wrap:anywhere}
+.guestQty{font-size:10px!important;color:#344054!important;margin:0!important;font-weight:800}
+.guestOrderBuilder .invoiceRemoveBtn{height:32px;padding:0 9px;white-space:nowrap}
+.guestOrderBuilder .invoiceTotal{margin-top:12px}
+.guestOrderBuilder .orderSubmitBtn{width:100%;height:46px;font-size:11px}
+@media(max-width:760px){.guestOrderBuilder .orderBuilderTop{padding:18px}.guestOrderBuilder .orderStep{padding:16px}.guestOrderBuilder .orderItemRow{grid-template-columns:1fr 1fr}.guestOrderBuilder .orderItemRow>div:nth-child(3){order:3}.guestOrderBuilder .orderItemRow>div:nth-child(4){order:4;text-align:right}.guestOrderBuilder .orderItemRow>.invoiceRemoveBtn{grid-column:1/-1;width:100%;height:40px}.guestPackageActions{align-items:stretch;flex-direction:column}.guestPackageActions .invoiceAddBtn{width:100%}.guestPackageActions span{text-align:center}.guestOrderBuilder .orderSubmitBtn{min-height:46px}}
+@media(max-width:430px){.guestOrderBuilder .orderBuilderTop h2{font-size:21px}.guestOrderBuilder .orderStepHead{gap:10px}.guestOrderBuilder .orderMetaGrid,.guestOrderBuilder .orderSelectGrid{grid-template-columns:1fr}.guestOrderBuilder .orderFullField{grid-column:1}.guestOrderBuilder .orderItemRow{grid-template-columns:1fr}.guestOrderBuilder .orderItemRow>div:nth-child(4){text-align:left}.guestOrderBuilder .invoiceTotal{padding:14px}.guestOrderBuilder select,.guestOrderBuilder input[name=customer_identifier],.guestOrderBuilder input[name=customer_name],.guestOrderBuilder input[name=transaction_last6]{min-height:44px}}
