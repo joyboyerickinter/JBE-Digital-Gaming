@@ -37,7 +37,15 @@ export default async function Home() {
 
   return <main className="page">
     <header className="topbar"><div className="brand"><span className="brandMark"><b>J</b><strong>BE</strong><i/></span><span><b>JBE</b><small>Digital + Gaming</small></span></div><div className="topActions"><span className="statusDot">Live Catalog</span><Link className="loginBtn" href={destination}>{actionLabel}</Link></div></header>
-    <section className="hero"><div className="eyebrow">DIGITAL PRODUCTS • GAME TOP-UP • RESELLER</div><h1>One place for your<br/><em>digital business.</em></h1><p>Browse JBE products and packages with clean B2C pricing.</p><Link className="createOrderBtn" href="/order">Create Order</Link></section>
+    <section className="hero"><div className="eyebrow">DIGITAL PRODUCTS • GAME TOP-UP • RESELLER</div><h1>One place for your<br/><em>digital business.</em></h1><p>Browse JBE products and packages with clean B2C pricing.</p><Link className="homeOrderCta" href="/order">
+        <div className="homeOrderIcon" aria-hidden="true">🛒</div>
+        <div className="homeOrderCopy">
+          <span className="miniLabel">CUSTOMER ORDER</span>
+          <strong>Order your product</strong>
+          <span>Choose packages, pay with KPay / AYA Pay, and submit your payment screenshot.</span>
+        </div>
+        <div className="homeOrderAction"><span>Start Order</span><b>→</b></div>
+      </Link></section>
     <section className="catalogHead"><div><span className="miniLabel">PRODUCT CATALOG</span><h2>Choose a product</h2></div><span className="publicBadge">B2C PRICES</span></section>
     <section className="catalogGrid">{catalog.map((p)=><ProductCard product={p} key={p.id}/>)}</section>
     <footer><span>JBE Digital + Gaming</span><span>Public catalog • Reseller access requires login</span><span className="catalogSupportLinks"><a href="https://t.me/JBE_OUTLINE_BOT">Telegram: JBE_OUTLINE_BOT</a><a href="https://t.me/Joy_Boy_Erick">Become a reseller</a></span></footer>
