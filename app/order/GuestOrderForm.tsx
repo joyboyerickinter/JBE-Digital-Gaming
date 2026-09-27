@@ -14,6 +14,50 @@ function SubmitButton(){
  return <button className="adminPrimaryBtn orderSubmitBtn" disabled={pending} type="submit">{pending?'Submitting order...':'Submit order →'}</button>;
 }
 
+async function compressScreenshot(file: File) {
+ const maxBytes = 900 * 1024;
+ if (file.size <= maxBytes) return file;
+
+ const bitmap = await createImageBitmap(file);
+ const maxDimension = 1600;
+ const scale = Math.min(1, maxDimension / Math.max(bitmap.width, bitmap.height));
+ const canvas = document.createElement('canvas');
+ canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+ canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+
+ const context = canvas.getContext('2d');
+ if (!context) {
+   bitmap.close();
+   return file;
+ }
+
+ context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+ bitmap.close();
+
+ const blob = await new Promise<Blob | null>((resolve) =>
+   canvas.toBlob(resolve, 'image/jpeg', 0.78)
+ );
+
+ if (!blob) return file;
+
+ return new File([blob], 'payment-screenshot.jpg', {
+   type: 'image/jpeg',
+   lastModified: Date.now(),
+ });
+}
+
+async function submitGuestOrder(formData: FormData) {
+ const screenshot = formData.get('screenshot');
+ if (screenshot instanceof File && screenshot.size > 900 * 1024) {
+   try {
+     formData.set('screenshot', await compressScreenshot(screenshot));
+   } catch (error) {
+     console.warn('Payment screenshot compression failed; using original file.', error);
+   }
+ }
+ return createGuestOrder(formData);
+}
+
 export default function GuestOrderForm({products}:{products:Product[]}){
  const router = useRouter();
  const searchParams = useSearchParams();
@@ -50,7 +94,7 @@ export default function GuestOrderForm({products}:{products:Product[]}){
 
  const removeItem=(index:number)=>setItems(items.filter((_,i)=>i!==index));
 
- return <form action={createGuestOrder} className="orderBuilder guestOrderBuilder" encType="multipart/form-data">
+ return <form action={submitGuestOrder} className="orderBuilder guestOrderBuilder" encType="multipart/form-data">
  <div className="orderBuilderTop"><div><span className="miniLabel">NEW CUSTOMER ORDER</span><h2>Create your order</h2><p>Choose your products, review the B2C total, then complete payment.</p></div><div className="invoiceBrandMark">JBE</div></div>
 
  <section className="orderStep">
