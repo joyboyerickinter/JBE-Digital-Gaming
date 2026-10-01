@@ -8,6 +8,12 @@ export async function sendAdminNewOrderEmail(order: {
   payment_method: string;
   transaction_last6: string;
   total_amount: number;
+  items: Array<{
+    product_name: string;
+    package_name: string;
+    quantity: number;
+    unit_price: number;
+  }>;
 }) {
   const apiKey = process.env.RESEND_API_KEY;
   const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL;
@@ -29,6 +35,16 @@ export async function sendAdminNewOrderEmail(order: {
       <p><strong>Customer:</strong> ${escapeHtml(order.customer_name)}</p>
       <p><strong>${identifierLabel}:</strong> ${escapeHtml(order.customer_identifier)}</p>
       <p><strong>Payment:</strong> ${paymentLabel} •••• ${escapeHtml(order.transaction_last6)}</p>
+      <p><strong>Items:</strong></p>
+      <ul>
+        ${order.items.map((item) => `
+          <li>
+            ${escapeHtml(item.product_name)} — ${escapeHtml(item.package_name)}
+            × ${item.quantity}
+            (${item.unit_price.toLocaleString('en-US')} Ks each)
+          </li>
+        `).join('')}
+      </ul>
       <p><strong>Total:</strong> ${order.total_amount.toLocaleString('en-US')} Ks</p>
       <p><a href="${process.env.NEXT_PUBLIC_SITE_URL || ''}/admin/orders">Open Admin Orders</a></p>
     </div>
