@@ -144,6 +144,12 @@ export async function createOrder(formData: FormData) {
       payment_method: paymentMethod,
       transaction_last6: transactionLast6,
       total_amount: total,
+      items: cleanItems.map(item => ({
+        product_name: item.product_name,
+        package_name: item.package_name,
+        quantity: item.quantity,
+        unit_price: item.reseller_price,
+      })),
       order_source: 'reseller',
     });
   } catch (emailError) {
@@ -292,6 +298,12 @@ export async function createGuestOrder(formData: FormData) {
       payment_method: paymentMethod,
       transaction_last6: transactionLast6,
       total_amount: total,
+      items: cleanItems.map(item => ({
+        product_name: item.product_name,
+        package_name: item.package_name,
+        quantity: item.quantity,
+        unit_price: item.b2c_price,
+      })),
       order_source: 'guest',
     });
   } catch (emailError) {
