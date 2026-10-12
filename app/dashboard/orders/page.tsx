@@ -14,7 +14,7 @@ export default async function OrdersPage({ searchParams }: { searchParams:Promis
   if(!profile?.active || profile.role!=='reseller') redirect('/dashboard');
 
   const admin=createAdminClient();
-  const {data:products}=await admin.from('products').select('id,name,sort_order,packages(id,name,active,sort_order,prices(price,customer_type,active))').eq('active',true).order('sort_order');
+  const [{data:products},{data:coinAccount}] = await Promise.all([admin.from('products').select('id,name,sort_order,packages(id,name,active,sort_order,prices(price,customer_type,active))').eq('active',true).order('sort_order'), admin.from('reseller_coin_accounts').select('balance').eq('reseller_id',userId).maybeSingle()]);
 
   const productData=(products??[]).map((p:any)=>({id:p.id,name:p.name,packages:(p.packages??[]).filter((x:any)=>x.active).sort((a:any,b:any)=>a.sort_order-b.sort_order).map((x:any)=>({id:x.id,name:x.name,productId:p.id,productName:p.name,price:Number(x.prices?.find((v:any)=>v.customer_type==='reseller'&&v.active)?.price??0)})).filter((x:any)=>x.price>0)})).filter((p:any)=>p.packages.length);
   const params=await searchParams;
@@ -24,7 +24,7 @@ export default async function OrdersPage({ searchParams }: { searchParams:Promis
     <div className="adminWrap">
       <header className="dashboardTopbar"><Link href="/" className="brand"><span className="brandMark"><b>J</b><strong>BE</strong><i /></span><span><b>JBE</b><small>Digital + Gaming</small></span></Link><div className="dashboardTopActions"><Link href="/dashboard" className="adminBtn">Dashboard</Link><form action={logout}><button className="logoutBtn" type="submit">Sign out</button></form></div></header>
       <section className="adminHero"><div><span className="miniLabel">RESELLER ORDERS</span><h1>Place your order.</h1><p>Choose multiple packages at reseller pricing, then send payment proof for processing.</p></div><Link href="/dashboard" className="backBtn">← Dashboard</Link></section>
-      <OrderForm products={productData}/>
+      <OrderForm products={productData} coinBalance={Number(coinAccount?.balance ?? 0)}/>
     </div>
   </main>;
 }
