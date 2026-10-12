@@ -48,16 +48,14 @@ export async function updateOrderStatus(formData: FormData) {
 
   const statusChanged = String(currentOrder.status) !== status;
 
-  const { error } = await admin
-    .from('orders')
-    .update({
-      status,
-      cancel_reason: status === 'cancel' ? cancelReason : null,
-      updated_at: new Date().toISOString(),
-    })
-    .eq('id', orderId);
+  const { data: coinsAwarded, error } = await admin.rpc('admin_set_order_status_with_coins', {
+    p_order_id: orderId,
+    p_status: status,
+    p_cancel_reason: status === 'cancel' ? cancelReason : null,
+  });
 
   if (error) {
+    console.error('Order status/coin award failed:', error.message);
     redirect(errorPath + '?error=Could%20not%20update%20order%20status');
   }
 
@@ -65,7 +63,7 @@ export async function updateOrderStatus(formData: FormData) {
     const statusLabel = status === 'done' ? 'DONE' : status === 'cancel' ? 'CANCELLED' : 'PENDING';
     const message = status === 'cancel'
       ? `Order ${String(currentOrder.order_number)} status has been changed to ${statusLabel}. Cancel reason: ${cancelReason}`
-      : `Order ${String(currentOrder.order_number)} status has been changed to ${statusLabel}.`;
+      : `Order ${String(currentOrder.order_number)} status has been changed to ${statusLabel}.${status === 'done' && Number(coinsAwarded) > 0 ? ` You earned ${Number(coinsAwarded)} coin(s).` : ''}`;
 
     const { error: notificationError } = await admin.from('notifications').insert({
       user_id: String(currentOrder.reseller_id),
