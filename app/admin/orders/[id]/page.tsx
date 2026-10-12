@@ -76,7 +76,7 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
               </div>
             ))}
           </div>
-          <div className="orderDetailTotal"><span>Total</span><strong>{Number(order.total_amount).toLocaleString('en-US')} Ks</strong></div>
+          <div className="orderDetailCoinSummary"><div><span>Subtotal</span><b>{Number(order.subtotal_amount ?? order.total_amount).toLocaleString('en-US')} Ks</b></div>{Number(order.coins_used)>0&&<div><span>Coins used</span><b>{Number(order.coins_used)} coins (−{Number(order.discount_amount).toLocaleString('en-US')} Ks)</b></div>}</div><div className="orderDetailTotal"><span>Total after discount</span><strong>{Number(order.total_amount).toLocaleString('en-US')} Ks</strong></div>
         </section>
 
         <section className="adminOrderDetailSection">
