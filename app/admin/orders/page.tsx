@@ -30,7 +30,7 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
     await Promise.all([
       admin
         .from('orders')
-        .select('id,order_number,reseller_id,source,customer_identifier,customer_identifier_type,customer_name,payment_method,transaction_last6,status,total_amount,created_at,profiles(full_name),order_items(product_name,package_name,quantity,line_total,sort_order)')
+        .select('id,order_number,reseller_id,source,customer_identifier,customer_identifier_type,customer_name,payment_method,transaction_last6,status,total_amount,subtotal_amount,discount_amount,coins_used,created_at,profiles(full_name),order_items(product_name,package_name,quantity,line_total,sort_order)')
         .order('created_at', { ascending: false })
         .limit(100),
       admin.from('orders').select('*', { count: 'exact', head: true }),
@@ -112,7 +112,7 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
 
                   <div className="adminOrderMeta">
                     <div><span>ITEMS</span><strong>{items.length}</strong></div>
-                    <div><span>TOTAL</span><strong>{Number(order.total_amount).toLocaleString('en-US')} Ks</strong></div>
+                    <div><span>TOTAL AFTER DISCOUNT</span><strong>{Number(order.total_amount).toLocaleString('en-US')} Ks</strong>{Number(order.coins_used)>0&&<small>−{Number(order.discount_amount).toLocaleString('en-US')} Ks · {order.coins_used} coins</small>}</div>
                     <div><span>PAYMENT</span><strong>{String(order.payment_method).toUpperCase()} •••• {order.transaction_last6}</strong></div>
                     <div><span>DATE</span><strong>{new Date(order.created_at).toLocaleString('en-GB')}</strong></div>
                   </div>
