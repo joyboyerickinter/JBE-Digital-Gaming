@@ -91,6 +91,14 @@ export default async function AdminPage() {
           </div>
 
           <div className="adminToolCard">
+            <div className="adminToolIcon">C</div>
+            <span className="miniLabel">REWARDS</span>
+            <h2>Reseller My Coin</h2>
+            <p>View balances, manually add or deduct coins, and review coin activity.</p>
+            <a className="adminPrimaryBtn" href="/admin/coins">Manage coins →</a>
+          </div>
+
+          <div className="adminToolCard">
             <div className="adminToolIcon">O</div>
             <span className="miniLabel">ORDERS</span>
             <h2>Reseller orders</h2>
