@@ -265,6 +265,9 @@ export async function createGuestOrder(formData: FormData) {
     payment_method: paymentMethod,
     transaction_last6: transactionLast6,
     status: 'pending',
+    subtotal_amount: total,
+    discount_amount: 0,
+    coins_used: 0,
     total_amount: total,
     currency: 'MMK',
   }).select('id,order_number').single();
