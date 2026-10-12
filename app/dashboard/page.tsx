@@ -27,11 +27,12 @@ export default async function Dashboard({ searchParams }: DashboardProps) {
     redirect('/login?error=Your%20account%20is%20inactive');
   }
 
-  const [{ data: products }, { data: packages }, { data: prices }, { count: invoiceCount }] = await Promise.all([
+  const [{ data: products }, { data: packages }, { data: prices }, { count: invoiceCount }, { data: coinAccount }] = await Promise.all([
     supabase.from('products').select('id,name,icon,image_path,sort_order').eq('active', true).order('sort_order'),
     supabase.from('packages').select('id,product_id,name,sort_order').eq('active', true).order('sort_order'),
     supabase.from('prices').select('package_id,customer_type,price').eq('active', true).eq('customer_type', 'reseller'),
     supabase.from('invoices').select('id', { count: 'exact', head: true }).eq('created_by', userId),
+    supabase.from('reseller_coin_accounts').select('balance').eq('reseller_id', userId).maybeSingle(),
   ]);
 
   const catalog = ((products ?? []) as Product[]).map((product) => ({
@@ -68,6 +69,8 @@ export default async function Dashboard({ searchParams }: DashboardProps) {
           <div><span className="miniLabel">JBE BUSINESS PORTAL</span><h1>Welcome back{profile.full_name ? `, ${profile.full_name}` : ''}.</h1><p>Manage your reseller orders with JBE pricing and business tools.</p></div>
           <div className="dashboardStats"><div><b>{catalog.length}</b><span>Products</span></div><div><b>{totalPackages}</b><span>Packages</span></div><div><b>{invoiceCount ?? 0}</b><span>My invoices</span></div></div>
         </section>
+
+        {!isAdmin && <section className="myCoinCard"><div className="myCoinIcon">🪙</div><div><span className="miniLabel">REWARDS BALANCE</span><h2>My Coin</h2><p>Earn coins when your orders are marked DONE. Use them for discounts at checkout.</p></div><div className="myCoinBalance"><b>{Number(coinAccount?.balance ?? 0).toLocaleString('en-US')}</b><span>coins</span></div></section>}
 
         {!isAdmin && <section className="resellerQuickActions"><Link href="/dashboard/orders" className="adminPrimaryBtn">New order →</Link><Link href="/dashboard/orders/history" className="resellerSecondaryBtn">Order history</Link><Link href="/dashboard/invoices" className="resellerSecondaryBtn">Invoices</Link></section>}
 
