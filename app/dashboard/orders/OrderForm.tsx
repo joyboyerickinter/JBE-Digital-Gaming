@@ -12,11 +12,12 @@ function SubmitButton() {
   return <button className="adminPrimaryBtn orderSubmitBtn" disabled={pending} type="submit">{pending ? <><span className="buttonSpinner" aria-hidden="true" />Submitting order...</> : 'Submit order →'}</button>;
 }
 
-export default function OrderForm({ products }: { products:Product[] }) {
+export default function OrderForm({ products, coinBalance }: { products:Product[]; coinBalance:number }) {
   const [identifierType,setIdentifierType] = useState('in_game_id');
   const [identifier,setIdentifier] = useState('');
   const [customerName,setCustomerName] = useState('');
   const [paymentMethod,setPaymentMethod] = useState('kpay');
+  const [coinsUsed,setCoinsUsed] = useState(0);
   const [items,setItems] = useState<Array<{productId:string;packageId:string;productName:string;packageName:string;price:number;quantity:number}>>([]);
 
   const addItem = () => {
@@ -57,7 +58,11 @@ export default function OrderForm({ products }: { products:Product[] }) {
     }));
   };
 
-  const total=useMemo(()=>items.reduce((sum,item)=>sum+item.price*item.quantity,0),[items]);
+  const subtotal=useMemo(()=>items.reduce((sum,item)=>sum+item.price*item.quantity,0),[items]);
+  const maxCoins=Math.min(coinBalance,Math.floor(subtotal/2));
+  const safeCoins=Math.min(coinsUsed,maxCoins);
+  const discount=safeCoins*2;
+  const total=subtotal-discount;
 
   return <form action={createOrder} className="orderBuilder" encType="multipart/form-data">
     <div className="orderBuilderTop"><div><span className="miniLabel">NEW RESELLER ORDER</span><h2>Place an order</h2><p>Select multiple products and packages, then submit payment proof.</p></div><div className="invoiceBrandMark">JBE</div></div>
@@ -85,7 +90,14 @@ export default function OrderForm({ products }: { products:Product[] }) {
         })}
       </div>
       <input type="hidden" name="items" value={JSON.stringify(items.map(i=>({product_id:i.productId,package_id:i.packageId,quantity:i.quantity})))} />
-      <div className="invoiceTotal"><span>Total reseller amount</span><strong>{total.toLocaleString('en-US')} Ks</strong></div>
+      <div className="coinRedeemPanel">
+        <div className="coinRedeemHead"><div><span className="miniLabel">MY COIN</span><strong>🪙 {coinBalance.toLocaleString('en-US')} coins available</strong></div><span>1 coin = 2 Ks</span></div>
+        <label className="coinUseField">Coins to use <input name="coins_used_display" type="number" min="0" max={maxCoins} step="1" value={safeCoins} onChange={e=>setCoinsUsed(Math.min(maxCoins,Math.max(0,Math.floor(Number(e.target.value)||0))))} /><small>Maximum {maxCoins.toLocaleString('en-US')} coins can be used for this order.</small></label>
+        <input type="hidden" name="coins_used" value={safeCoins} />
+        <div className="coinSummaryRow"><span>Subtotal</span><strong>{subtotal.toLocaleString('en-US')} Ks</strong></div>
+        <div className="coinSummaryRow"><span>Coin discount ({safeCoins} × 2 Ks)</span><strong>−{discount.toLocaleString('en-US')} Ks</strong></div>
+        <div className="invoiceTotal"><span>Total after discount</span><strong>{total.toLocaleString('en-US')} Ks</strong></div>
+      </div>
     </section>
 
     <section className="orderStep"><div className="orderStepHead"><b>03</b><span>Payment</span></div>
