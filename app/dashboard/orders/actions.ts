@@ -24,6 +24,7 @@ export async function createOrder(formData: FormData) {
   const transactionLast6 = String(formData.get('transaction_last6') || '').trim();
   const itemsRaw = String(formData.get('items') || '[]');
   const screenshot = formData.get('screenshot');
+  const coinsRaw = Number(formData.get('coins_used') || 0);
 
   const errorPath = '/dashboard/orders';
   if (!['in_game_id','email'].includes(identifierType)) redirect(errorPath + '?error=Invalid%20customer%20ID%20type');
@@ -63,8 +64,15 @@ export async function createOrder(formData: FormData) {
     redirect(errorPath + '?error=One%20or%20more%20packages%20are%20unavailable');
   }
 
-  const total = cleanItems.reduce((sum,item) => sum + item.reseller_price * item.quantity, 0);
-  if (total <= 0) redirect(errorPath + '?error=Invalid%20order%20total');
+  const subtotal = cleanItems.reduce((sum,item) => sum + item.reseller_price * item.quantity, 0);
+  if (subtotal <= 0) redirect(errorPath + '?error=Invalid%20order%20total');
+  if (!Number.isInteger(coinsRaw) || coinsRaw < 0) redirect(errorPath + '?error=Invalid%20coin%20amount');
+  const { data: coinAccount, error: coinReadError } = await admin.from('reseller_coin_accounts').select('balance').eq('reseller_id', resellerId).maybeSingle();
+  if (coinReadError) redirect(errorPath + '?error=Could%20not%20verify%20coin%20balance');
+  const coinBalance = Number(coinAccount?.balance ?? 0);
+  if (coinsRaw > coinBalance || coinsRaw > Math.floor(subtotal / 2)) redirect(errorPath + '?error=Not%20enough%20coins%20or%20discount%20exceeds%20order');
+  const discount = coinsRaw * 2;
+  const total = subtotal - discount;
 
   let screenshotPath: string | null = null;
   if (!(screenshot instanceof File) || screenshot.size === 0) {
@@ -86,6 +94,9 @@ export async function createOrder(formData: FormData) {
     payment_method: paymentMethod,
     transaction_last6: transactionLast6,
     status: 'pending',
+    subtotal_amount: subtotal,
+    discount_amount: discount,
+    coins_used: coinsRaw,
     total_amount: total,
     currency: 'MMK',
   }).select('id,order_number').single();
@@ -128,6 +139,14 @@ export async function createOrder(formData: FormData) {
     redirect(errorPath + '?error=Could%20not%20save%20order%20items');
   }
 
+  const { error: redemptionError } = await admin.rpc('redeem_reseller_coins', { p_order_id: order.id, p_reseller_id: resellerId, p_coins: coinsRaw, p_subtotal: subtotal, p_discount: discount, p_total: total });
+  if (redemptionError) {
+    await admin.storage.from('order-screenshots').remove([screenshotPath]);
+    await admin.from('orders').delete().eq('id', order.id);
+    const message = redemptionError.message?.includes('Not enough coins') ? 'Not%20enough%20coins%20remaining' : 'Could%20not%20apply%20coin%20discount';
+    redirect(errorPath + '?error=' + message);
+  }
+
   const { data: resellerProfile } = await admin
     .from('profiles')
     .select('full_name')
@@ -144,6 +163,9 @@ export async function createOrder(formData: FormData) {
       payment_method: paymentMethod,
       transaction_last6: transactionLast6,
       total_amount: total,
+      subtotal_amount: subtotal,
+      discount_amount: discount,
+      coins_used: coinsRaw,
       items: cleanItems.map(item => ({
         product_name: item.product_name,
         package_name: item.package_name,
