@@ -8,6 +8,9 @@ export async function sendAdminNewOrderEmail(order: {
   payment_method: string;
   transaction_last6: string;
   total_amount: number;
+  subtotal_amount?: number;
+  discount_amount?: number;
+  coins_used?: number;
   items: Array<{
     product_name: string;
     package_name: string;
@@ -45,7 +48,9 @@ export async function sendAdminNewOrderEmail(order: {
           </li>
         `).join('')}
       </ul>
-      <p><strong>Total:</strong> ${order.total_amount.toLocaleString('en-US')} Ks</p>
+      ${order.subtotal_amount != null ? `<p><strong>Subtotal:</strong> ${order.subtotal_amount.toLocaleString('en-US')} Ks</p>` : ''}
+      ${order.coins_used ? `<p><strong>Coins used:</strong> ${order.coins_used} (−${Number(order.discount_amount || 0).toLocaleString('en-US')} Ks)</p>` : ''}
+      <p><strong>Total after discount:</strong> ${order.total_amount.toLocaleString('en-US')} Ks</p>
       <p><a href="${process.env.NEXT_PUBLIC_SITE_URL || ''}/admin/orders">Open Admin Orders</a></p>
     </div>
   `;
