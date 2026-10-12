@@ -21,7 +21,7 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
   const admin = createAdminClient();
   const { data: order } = await admin
     .from('orders')
-    .select('id,order_number,reseller_id,source,customer_identifier,customer_identifier_type,customer_name,payment_method,transaction_last6,screenshot_path,status,cancel_reason,total_amount,currency,created_at,updated_at,profiles(full_name),order_items(product_id,package_id,product_name,package_name,reseller_price,quantity,line_total,sort_order)')
+    .select('id,order_number,reseller_id,source,customer_identifier,customer_identifier_type,customer_name,payment_method,transaction_last6,screenshot_path,status,cancel_reason,total_amount,subtotal_amount,discount_amount,coins_used,currency,created_at,updated_at,profiles(full_name),order_items(product_id,package_id,product_name,package_name,reseller_price,quantity,line_total,sort_order)')
     .eq('id', orderId)
     .maybeSingle();
 
