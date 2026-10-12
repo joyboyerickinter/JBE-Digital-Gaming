@@ -23,6 +23,7 @@ drop policy if exists "Resellers view own coin balance" on public.reseller_coin_
 create policy "Resellers view own coin balance" on public.reseller_coin_accounts for select to authenticated using ((select auth.uid()) = reseller_id);
 drop policy if exists "Resellers view own coin ledger" on public.reseller_coin_ledger;
 create policy "Resellers view own coin ledger" on public.reseller_coin_ledger for select to authenticated using ((select auth.uid()) = reseller_id);
+grant select on public.reseller_coin_accounts, public.reseller_coin_ledger to authenticated;
 
 alter table public.orders add column if not exists subtotal_amount numeric(12,2);
 alter table public.orders add column if not exists discount_amount numeric(12,2) not null default 0;
