@@ -112,7 +112,7 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
 
                   <div className="adminOrderMeta">
                     <div><span>ITEMS</span><strong>{items.length}</strong></div>
-                    <div><span>TOTAL AFTER DISCOUNT</span><strong>{Number(order.total_amount).toLocaleString('en-US')} Ks</strong>{Number(order.coins_used)>0&&<small>−{Number(order.discount_amount).toLocaleString('en-US')} Ks · {order.coins_used} coins</small>}</div>
+                    <div><span>TOTAL AFTER DISCOUNT</span><strong>{Number(order.total_amount).toLocaleString('en-US')} Ks</strong>{Number(order.coins_used)>0&&<small>Subtotal {Number(order.subtotal_amount ?? order.total_amount).toLocaleString('en-US')} Ks · −{Number(order.discount_amount).toLocaleString('en-US')} Ks · {order.coins_used} coins</small>}</div>
                     <div><span>PAYMENT</span><strong>{String(order.payment_method).toUpperCase()} •••• {order.transaction_last6}</strong></div>
                     <div><span>DATE</span><strong>{new Date(order.created_at).toLocaleString('en-GB')}</strong></div>
                   </div>
